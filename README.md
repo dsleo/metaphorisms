@@ -8,7 +8,8 @@ Each district is a family of images (games and sport, religion, economy, terrain
 
 ## Contents
 
-- `index.html`: the whole site in one self-contained file (no build step, no external requests).
+- `index.html`: the whole site in one file (no build step, no external requests).
+- `fonts/`: subset woff2 fonts, loaded on demand.
 - `FONT-LICENSE-OFL.txt`: licence for the embedded fonts.
 - `.nojekyll`: tells GitHub Pages to serve the files as they are.
 
