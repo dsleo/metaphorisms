@@ -75,14 +75,16 @@ def prompt(page, url, data):
         ex.setdefault(r["c"], []).append(r["t"])
     dist = "\n".join(f'- {c["id"]}: {c["name"]} (e.g. {"; ".join(ex.get(c["id"], [])[:4])})' for c in data["clusters"])
     return f"""You catalogue the metaphors that mathematicians and writers use when talking about AI and mathematics.
-Read the text below and list its distinct metaphors/analogies/images (not plain arguments). For each:
+Read the text below and list its genuine metaphors: figurative images or similes that compare AI, mathematics or mathematicians to something from another domain (a journey, a sport, a building, a machine...).
+NOT metaphors, leave them out: plain arguments or proposals (even with a famous name in them, e.g. "a CERN for X" is a literal proposal), real anecdotes used as examples, stock idioms and dead metaphors (a result being "digested", a "framework", "foundations", "deep", "tools"), and technical terms. Only keep an image the author actually uses or develops figuratively. When in doubt, leave it out; returning no metaphors at all is a perfectly good answer.
+For each metaphor:
 - district: the family the image is drawn FROM (what AI or mathematics is being compared to), as one id from the list below. Do not force a fit: if the source domain is not one of these families (for example a mathematical structure such as a hull or a group used as a picture for AI), answer "NEW" and give new_district: a short name for the missing family. For other metaphors, "NEW" must not be used just because the fit is imperfect.
 - district_reason: one short line saying what the image is drawn from and why that district (or why none).
 - title: 2-5 words naming the image.
 - paraphrase: one or two sentences in your own words (never quote), saying what the image says about AI/mathematics.
 - style_hint: one sentence describing the building to draw for this image (concrete shapes and objects).
 Also give: id (camelCase, author's surname plus a short word if needed), title, author (display name; "Readers on X's post" for comment threads), kind ("essay", "comment" for reader comments, or "tweet"), date (YYYY-MM-DD, use the hint if given).
-Be selective: only real, vivid metaphors, between 1 and 8. Existing metaphors in the city, for calibration:
+Be selective: between 0 and 8 metaphors. Existing metaphors in the city, for calibration:
 {dist}
 
 URL: {url}
@@ -154,7 +156,10 @@ def main():
         sys.exit(f"Already in the city as {dup!r} ({known[dup][0]!r}, {known[dup][1]}). Use --force to add it anyway.")
     if len(page["text"]) < (40 if page.get("short") else 500):
         sys.exit("Fetched too little text (paywall/JS page?). Paste the text into a file or use a Claude Code session.")
-    out, new = write_draft(ask(prompt(page, url, data), model), url, page, [c["id"] for c in data["clusters"]], force)
+    resp = ask(prompt(page, url, data), model)
+    if not resp["metaphors"]:
+        sys.exit("No genuine metaphor found in this text, so nothing was added.")
+    out, new = write_draft(resp, url, page, [c["id"] for c in data["clusters"]], force)
     print(f"Draft: {out.relative_to(build.ROOT)}")
     return out, new
 
