@@ -48,6 +48,28 @@ def dump(data):  # ensure_ascii matches how the blob was first written
     return json.dumps(data, separators=(",", ":"))
 
 
+# ---------- duplicates ----------
+def _alnum(s):
+    return re.sub(r"[^a-z0-9]+", "", s.lower())
+
+
+def norm_url(u):
+    p = urlparse(u)
+    return p.netloc.lower().removeprefix("www.") + p.path.rstrip("/")
+
+
+def same_title(a, b):
+    a, b = _alnum(a), _alnum(b)
+    return bool(a and b) and (a == b or (min(len(a), len(b)) >= 12 and (a in b or b in a)))
+
+
+def find_duplicate(title, url, known):
+    """known: {id: (title, url)} -> id of a text with the same URL or title, else None."""
+    for tid, (t, u) in known.items():
+        if norm_url(u) == norm_url(url) or same_title(t, title):
+            return tid
+
+
 # ---------- read / validate texts ----------
 def load_texts(districts):
     out = {}
@@ -134,12 +156,11 @@ def add_text(data, t):
 def pick_slot(data, c, w):
     blocks = data["blocks"]
     used = {p for b in data["buildings"] for p in footprint(b)}
-    if w == 1:  # a free cell in a frontier block this district already owns
-        for bk in blocks:
-            if bk["c"] == c and frontier(bk):
-                free = [p for p in cells(bk) if p not in used]
-                if len(free) > 4 - MAX_PER_BLOCK:
-                    return free[0]
+    if w == 1:  # replace a tree in a block of this district (original or new), keeping the block breathing
+        spots = [[p for p in cells(bk) if p not in used] for bk in blocks if bk["c"] == c and not bk.get("open")]
+        spots = [f for f in spots if len(f) > 4 - MAX_PER_BLOCK]
+        if spots:
+            return max(spots, key=len)[0]  # the block with the most trees left (first one on ties)
     while not any(bk.get("open") for bk in blocks):
         grow(data)
     mine = [bk for bk in blocks if bk["c"] == c and frontier(bk)]
@@ -161,14 +182,14 @@ def grow(data):  # one new L-shaped ring of unexplored blocks along +x / +y
 
 
 def refresh_decor(data):
-    """Trees on the free cells of claimed frontier blocks. The original blocks are never touched."""
+    """Trees on every cell without a building. Trees under a new building are dropped; the new area
+    (open blocks included, as parks) is regenerated. Original trees elsewhere are never touched."""
     used = {p for b in data["buildings"] for p in footprint(b)}
     fr = [bk for bk in data["blocks"] if frontier(bk)]
     skip = {p for bk in fr for p in cells(bk)}
-    data["decor"] = [d for d in data["decor"] if (d["x"], d["y"]) not in skip]
+    data["decor"] = [d for d in data["decor"] if (d["x"], d["y"]) not in skip and (d["x"], d["y"]) not in used]
     for bk in fr:
-        if not bk.get("open"):
-            data["decor"] += [{"x": x, "y": y, "c": bk["c"]} for x, y in cells(bk) if (x, y) not in used]
+        data["decor"] += [{"x": x, "y": y, "c": bk["c"]} for x, y in cells(bk) if (x, y) not in used]
 
 
 def refresh_links(data):
@@ -226,7 +247,9 @@ def assert_extension_only(old, new):
     for key in ("labels", "clusters", "ICONS"):
         assert old[key] == new[key], key + " changed"
     assert all(b in new["blocks"] for b in old["blocks"] if not frontier(b)), "original block changed"
-    assert all(d in new["decor"] for d in old["decor"] if (d["x"] - 1) // 3 < FIRST_RING and (d["y"] - 1) // 3 < FIRST_RING), "original decor changed"
+    built = {p for b in new["buildings"] for p in footprint(b)}
+    assert all(d in new["decor"] or (d["x"], d["y"]) in built for d in old["decor"]
+               if (d["x"] - 1) // 3 < FIRST_RING and (d["y"] - 1) // 3 < FIRST_RING), "original tree removed without a building"
 
 
 def main():
@@ -235,7 +258,13 @@ def main():
     old = json.loads(json.dumps(data))
     reconcile(data, texts := load_texts([c["id"] for c in data["clusters"]]))
     freeze_style_index(data)
+    known = {i: (v["t"], v["u"]) for i, v in data["S"].items()}
     for t in sorted((t for i, t in texts.items() if i not in data["S"]), key=lambda t: (t["date"], t["id"])):
+        dup = None if t.get("duplicate_ok") else find_duplicate(t["title"], t["url"], known)
+        if dup:
+            die(f"{t['id']} looks like a duplicate of {dup} ({known[dup][0]!r}). If it really is a different text, "
+                'add "duplicate_ok": true to its JSON; otherwise delete texts/' + t["id"] + ".json.")
+        known[t["id"]] = (t["title"], t["url"])
         add_text(data, t)
     refresh_decor(data)
     refresh_links(data)

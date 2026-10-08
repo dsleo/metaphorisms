@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Draft texts/<id>.json from a URL with an LLM. Stops after drafting: review, then run build.py.
 
-    python3 scripts/add.py <url> [--model gpt-6-luna]   # OPENAI_API_KEY from the environment or .env
+    python3 scripts/add.py <url> [--model gpt-6-luna] [--force]   # OPENAI_API_KEY from the environment or .env
 
 Only existing districts are handled automatically. If the LLM says a metaphor fits none of them,
 the draft goes to texts/_pending/ (ignored by build.py) with a note, and a new district has to be
@@ -65,10 +65,12 @@ def fetch(url):
             "text": re.sub(r"\n\s*\n+", "\n\n", "".join(p.text)).strip()[:MAX_CHARS]}
 
 
-def prompt(page, url, data):
+def prompt(page, url, data, force=False):
     ex = {}
     for r in data["rows"]:
         ex.setdefault(r["c"], []).append(r["t"])
+    au = {r["s"]: r["a"] for r in data["rows"]}
+    texts = "\n".join(f'- {k}: {v["t"]!r} by {au[k]}, {v["d"]}, {v["u"]}' for k, v in data["S"].items())
     dist = "\n".join(f'- {c["id"]}: {c["name"]} (e.g. {"; ".join(ex.get(c["id"], [])[:4])})' for c in data["clusters"])
     return f"""You catalogue the metaphors that mathematicians and writers use when talking about AI and mathematics.
 Read the text below and list its distinct metaphors/analogies/images (not plain arguments). For each:
@@ -77,6 +79,8 @@ Read the text below and list its distinct metaphors/analogies/images (not plain 
 - paraphrase: one or two sentences in your own words (never quote), saying what the image says about AI/mathematics.
 - style_hint: one sentence describing the building to draw for this image (concrete shapes and objects).
 Also give: id (camelCase, author's surname plus a short word if needed), title, author (display name; "Readers on X's post" for comment threads), kind ("essay" or "comment"), date (YYYY-MM-DD, use the hint if given).
+Also set duplicate_of: the id of a text already in the city if this page is the same piece (a repost on another site, a mirror, or a comment thread on it, even with another URL or title), else "". Already in the city:
+{texts}
 Be selective: only real, vivid metaphors, between 1 and 8. Existing metaphors in the city, for calibration:
 {dist}
 
@@ -87,8 +91,8 @@ TEXT:
 
 
 SCHEMA = {"type": "object", "additionalProperties": False,
-          "required": ["id", "title", "author", "kind", "date", "metaphors"],
-          "properties": {"id": {"type": "string"}, "title": {"type": "string"}, "author": {"type": "string"},
+          "required": ["duplicate_of", "id", "title", "author", "kind", "date", "metaphors"],
+          "properties": {"duplicate_of": {"type": "string"}, "id": {"type": "string"}, "title": {"type": "string"}, "author": {"type": "string"},
                          "kind": {"type": "string", "enum": ["essay", "comment"]}, "date": {"type": "string"},
                          "metaphors": {"type": "array", "items": {"type": "object", "additionalProperties": False,
                              "required": ["district", "new_district", "title", "paraphrase", "style_hint"],
@@ -104,7 +108,7 @@ def ask(content, model):
         return json.loads(json.loads(r.read())["choices"][0]["message"]["content"])
 
 
-def write_draft(resp, url, page, districts):
+def write_draft(resp, url, page, districts, force=False):
     """-> (path, new_districts). Pure file logic, no network."""
     tid = re.sub(r"[^A-Za-z0-9]", "", resp["id"]) or "text"
     tid = tid[0].lower() + tid[1:] if tid[0].isalpha() else "t" + tid
@@ -120,6 +124,8 @@ def write_draft(resp, url, page, districts):
         ms.append(d)
     t = {"id": tid, "title": resp["title"], "url": url, "date": page["date"] or resp["date"],
          "author": resp["author"], "kind": resp["kind"], "metaphors": ms}
+    if force:
+        t["duplicate_ok"] = True
     out = build.TEXTS / ("_pending" if new else "") / f"{tid}.json"
     out.parent.mkdir(exist_ok=True)
     out.write_text(json.dumps(t, indent=2, ensure_ascii=False) + "\n")
@@ -132,15 +138,23 @@ def main():
     model = os.environ.get("OPENAI_MODEL", DEFAULT_MODEL)
     if "--model" in argv:
         i = argv.index("--model"); model = argv[i + 1]; del argv[i:i + 2]
+    force = "--force" in argv
     args = [a for a in argv if not a.startswith("--")]
     if len(args) != 1 or "OPENAI_API_KEY" not in os.environ:
         sys.exit(__doc__)
     url = args[0]
     _, data, _, _ = build.load_html()
     page = fetch(url)
+    known = {i: (v["t"], v["u"]) for i, v in data["S"].items()}
+    dup = None if force else build.find_duplicate(page["title"], url, known)
+    if dup:
+        sys.exit(f"Already in the city as {dup!r} ({known[dup][0]!r}, {known[dup][1]}). Use --force to add it anyway.")
     if len(page["text"]) < 500:
         sys.exit("Fetched too little text (paywall/JS page?). Paste the text into a file or use a Claude Code session.")
-    out, new = write_draft(ask(prompt(page, url, data), model), url, page, [c["id"] for c in data["clusters"]])
+    resp = ask(prompt(page, url, data), model)
+    if resp["duplicate_of"] in known and not force:
+        sys.exit(f"Already in the city as {resp['duplicate_of']!r} ({known[resp['duplicate_of']][0]!r}): same content under another URL. Use --force to add it anyway.")
+    out, new = write_draft(resp, url, page, [c["id"] for c in data["clusters"]], force)
     print(f"Draft: {out.relative_to(build.ROOT)}")
     return out, new
 

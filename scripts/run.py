@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """One command: URL -> draft text -> new city -> open index.html to look at it.
 
-    python3 scripts/run.py <url> [--model M] [--no-open]
+    python3 scripts/run.py <url> [--model M] [--no-open] [--force]
 
 To throw the result away: git checkout index.html README.md && rm texts/<id>.json
 (the draft's path is printed). If a metaphor needs a new district, it stops after the draft.
