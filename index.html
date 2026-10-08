@@ -245,6 +245,12 @@ body.hatch .plate-r{fill:url(#hatchN)}
 .zoom{position:absolute;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:6px;z-index:2}
 .zoom button{width:40px;height:40px;border:1px solid var(--panel-line);border-radius:9px;background:var(--panel);color:var(--ink);font:500 20px/1 "CMU Serif",sans-serif;cursor:pointer}
 .zoom button.fit{font-size:12px}
+.bld.unborn{opacity:0;visibility:hidden}
+.bld.born .ft,.bld.born .fl,.bld.born .fr,.bld.born .ln{stroke:var(--acc);stroke-width:1.8}
+.replaydate{position:absolute;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:2;pointer-events:none;background:var(--panel);border:1px solid var(--panel-line);border-radius:999px;padding:7px 18px;font:500 15px/1.2 "CMU Sans Serif",system-ui,sans-serif;color:var(--ink);white-space:nowrap}
+.replaydate[hidden]{display:none}
+.replaydate small{color:var(--muted);font-size:13px;margin-left:8px}
+#replaystop[hidden]{display:none}
 .zoom button:focus-visible{outline:2px solid var(--link);outline-offset:2px}
 
 .panel{position:absolute;right:16px;top:16px;width:360px;max-height:calc(100% - 32px);overflow:auto;background:var(--panel);border:1px solid var(--panel-line);border-radius:12px;padding:18px 18px 16px;z-index:3;display:none}
@@ -326,8 +332,11 @@ body.hatch .plate-r{fill:url(#hatchN)}
     <button type="button" id="zfit" aria-label="Show the whole city" title="Show the whole city"><svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true"><path d="M4 9V5a1 1 0 0 1 1-1h4M15 4h4a1 1 0 0 1 1 1v4M20 15v4a1 1 0 0 1-1 1h-4M9 20H5a1 1 0 0 1-1-1v-4"/></svg></button>
     <button type="button" id="zout" aria-label="Zoom out" title="Zoom out">−</button>
   </div>
+  <button type="button" id="replaystop" hidden aria-label="Stop the replay" title="Stop the replay"><svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true"><rect x="6.5" y="6.5" width="11" height="11" rx="1.5"/></svg></button>
+  <button type="button" id="replaybtn" aria-label="Replay how the city was built" title="Replay how the city was built"></button>
   <button type="button" id="toolsbtn" aria-expanded="false" aria-controls="tools" aria-label="Show controls" title="Controls"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><circle cx="12" cy="12" r="3.2"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
 </div>
+<div class="replaydate" id="replaydate" hidden aria-live="polite"></div>
 <script>
 // build the city after the first paint so the title and background show immediately
 requestAnimationFrame(()=>setTimeout(()=>{
@@ -995,7 +1004,7 @@ const svg=$("map"), world=$("world"), N=3*DATA.NB+1;
   // flying vehicles live in a top layer but behave as part of their building
   $("air").innerHTML=DATA.buildings.filter(b=>b.airSvg).sort((a,b)=>a.y+a.x-(b.y+b.x)).map(b=>`<g class="bld airborne" data-b="${b.i}" data-d="${b.c}" tabindex="-1">${b.airSvg}</g>`).join("");
   DATA.buildings.forEach(b=>{ if(!b.airSvg) return; b.air=document.querySelector(`#air .bld[data-b="${b.i}"]`);
-    const sync=()=>["sel","kin","dim","out"].forEach(c=>b.air.classList.toggle(c,b.el.classList.contains(c)));
+    const sync=()=>["sel","kin","dim","out","unborn","born"].forEach(c=>b.air.classList.toggle(c,b.el.classList.contains(c)));
     new MutationObserver(sync).observe(b.el,{attributes:true,attributeFilter:["class"]}); });
 })();
 const DL=[];
@@ -1051,7 +1060,7 @@ function flyTo(target,ms=700){
     T={k:s.k*Math.pow(target.k/s.k,u),x:s.x+(target.x-s.x)*u,y:s.y+(target.y-s.y)*u}; apply(); if(u<1) anim=requestAnimationFrame(step); };
   anim=requestAnimationFrame(step);
 }
-const homeBox=()=>fitBox(100,-40,1340,890,20);
+const homeBox=()=>fitBox(P(0,N)[0]-12,-40,P(N,0)[0]+12,P(N,N)[1]+32,20); // follows the map as it grows
 function zoomAt(f,cx,cy){ const k=Math.max(KMIN,Math.min(KMAX,T.k*f)), r=k/T.k; T={k,x:cx-(cx-T.x)*r,y:cy-(cy-T.y)*r}; apply(); }
 const pts=new Map(); let moved=0, pinch=null;
 svg.addEventListener("pointerdown",e=>{ pts.set(e.pointerId,{x:e.clientX,y:e.clientY}); moved=0;
@@ -1205,6 +1214,38 @@ function setStyle(id){
   try{ localStorage.setItem("city-style",s.id); }catch(e){}
 }
 document.querySelectorAll(".sopt").forEach(b=>b.onclick=()=>{ setStyle(b.dataset.style); styleMenu(false); $("stylebtn").focus(); });
+/* ================= REPLAY: the city appearing text by text, in date order ================= */
+const RP={state:"idle",steps:[],i:0,timer:0};
+const RPI={play:`<svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>`,pause:`<svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true"><path d="M8.5 5v14M15.5 5v14"/></svg>`};
+function replayUI(){
+  const on=RP.state==="playing";
+  $("replaybtn").innerHTML=on?RPI.pause:RPI.play;
+  $("replaybtn").title=$("replaybtn").ariaLabel=on?"Pause the replay":"Replay how the city was built";
+  $("replaystop").hidden=$("replaydate").hidden=RP.state==="idle";
+}
+function replayStep(){
+  if(RP.i>=RP.steps.length){ RP.state="ending"; replayUI(); RP.timer=setTimeout(replayStop,2200); return; }
+  const st=RP.steps[RP.i++];
+  st.bs.forEach(b=>{ b.el.classList.remove("unborn"); b.el.classList.add("born"); setTimeout(()=>b.el.classList.remove("born"),1200); });
+  $("replaydate").innerHTML=`${esc(fmtDate(DATA.S[st.s].d))}<small>${RP.i} / ${RP.steps.length} texts</small>`;
+  RP.timer=setTimeout(replayStep,Math.min(550,16000/RP.steps.length));
+}
+function replayPlay(){
+  clearTimeout(RP.timer);
+  if(RP.state==="idle"||RP.state==="ending"){ // start from an empty plate
+    clearSel(); setFocus(null); closePanel(); flyTo(homeBox());
+    const by={}; DATA.buildings.forEach(b=>{ (by[b.s]=by[b.s]||[]).push(b); b.el.classList.add("unborn"); });
+    RP.steps=Object.keys(by).sort((a,b)=>DATA.S[a].d.localeCompare(DATA.S[b].d)||a.localeCompare(b)).map(s=>({s,bs:by[s]})); RP.i=0;
+    $("replaydate").textContent="";
+    RP.state="playing"; replayUI(); RP.timer=setTimeout(replayStep,700); return;
+  }
+  RP.state="playing"; replayUI(); replayStep();
+}
+function replayPause(){ clearTimeout(RP.timer); RP.state="paused"; replayUI(); }
+function replayStop(){ clearTimeout(RP.timer); DATA.buildings.forEach(b=>b.el.classList.remove("unborn","born")); RP.state="idle"; replayUI(); }
+$("replaybtn").onclick=()=>RP.state==="playing"?replayPause():replayPlay();
+$("replaystop").onclick=replayStop;
+replayUI();
 T=homeBox(); KHOME=T.k;
 let saved=null; try{ saved=localStorage.getItem("city-style"); }catch(e){} setStyle(saved||"night");
 apply(); search();

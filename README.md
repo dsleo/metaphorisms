@@ -2,7 +2,7 @@
 
 An isometric city of the metaphors mathematicians use to talk about AI.
 
-Each district is a family of images (games and sport, religion, economy, terrain and exploration…), and each building is one text's metaphors within that district. Hover a building to see where the same text built elsewhere in the city; click it to read the metaphors and open the original text.
+Each district is a family of images (games and sport, religion, economy, terrain and exploration…), and each building is one text's metaphors within that district. Hover a building to see where the same text built elsewhere in the city; click it to read the metaphors and open the original text. The play button (bottom right) replays how the city was built, text by text in date order; it turns into a pause button, and a stop button appears next to it.
 
 **Live site:** open `index.html`, or visit the GitHub Pages URL for this repository.
 
