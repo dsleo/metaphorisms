@@ -28,6 +28,16 @@ The view is kept in the URL hash, so any view can be shared or bookmarked, and t
 
 The author id is the lower-case name without accents or punctuation (`david-bessis`, `vladimir-lazic`). Reader comments and anonymous authors have no author page; co-authors each get one. Unknown ids fall back to the whole city. The tab title follows the selection.
 
+## A city that remembers you
+
+The page remembers, **in your browser only** (local storage, nothing is sent anywhere):
+
+- **What is new.** Every text records when it was added to the city (`added`, set by `build.py`; the original 30 texts predate the log). A returning visitor sees a note such as "5 new texts since your last visit", the new buildings pulse in the accent colour, and "Watch them being built" replays just those texts on top of the city. Opening a new building, or dismissing the note, clears the glow.
+- **What you have explored.** The first chip in the row of controls at the bottom right counts the buildings you have opened. Click it to dim the others, so the map shows your footprint, and click it again to bring everything back. Each district panel says how many of its buildings you have opened. (To forget it all, clear this site's data in your browser.)
+- **Recently added.** The clock button lists the latest texts grouped by day, each day with its own "Watch them being built".
+
+A first-time visitor sees none of it: nothing is "new" before you have visited once.
+
 ## Adding a text
 
 ### How it works
@@ -80,6 +90,7 @@ You can also write `texts/<id>.json` by hand (the id is a short camelCase key, e
 }
 ```
 
+- `added` (optional, `2026-10-08T13:10:41Z`, UTC) is normally stamped by `build.py` the first time a text is built; set it only to back-date a text.
 - A metaphor may carry its own `author` and `kind` when it comes from someone else than the text, e.g. a reader comment quoted inside a post (`"author": "Readers on X's post", "kind": "comment"`); the table then shows `essay + comment`.
 - `kind` is `essay`, `comment` or `tweet`; `district` is one of the existing district ids (see `DATA.clusters`, or `districts/`).
 - Then run `python3 scripts/build.py`.

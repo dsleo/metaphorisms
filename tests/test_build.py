@@ -123,6 +123,33 @@ class TestExtension(Sandbox):
         self.assertNotEqual(self.run_build()[0], 0)
 
 
+class TestAddedStamp(Sandbox):
+    """Each text records when it was added to the city; the page uses it for 'new since your last visit'."""
+
+    def test_new_texts_get_a_stamp_that_never_changes_and_the_original_city_has_none(self):
+        for original in ("littBabel", "asher", "bessis"):  # the first city predates the log
+            self.assertNotIn("a", self.data()["S"][original])
+        self.put(text("fresh", ["games"]))
+        self.assertEqual(self.run_build()[0], 0)
+        stamp = self.data()["S"]["fresh"]["a"]
+        self.assertRegex(stamp, r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$")
+        self.assertEqual(self.run_build()[0], 0)
+        self.assertEqual(self.data()["S"]["fresh"]["a"], stamp)
+        self.assertEqual(self.run_build("--check")[0], 0)
+
+    def test_added_in_the_text_file_is_honoured_and_can_backdate_once(self):
+        self.put(text("old", ["games"], added="2026-01-02T03:04:05Z"))
+        self.assertEqual(self.run_build()[0], 0)
+        self.assertEqual(self.data()["S"]["old"]["a"], "2026-01-02T03:04:05Z")
+        self.put(text("old", ["games"], added="2026-01-03T00:00:00Z"))  # an existing text can be back-dated
+        self.assertEqual(self.run_build()[0], 0)
+        self.assertEqual(self.data()["S"]["old"]["a"], "2026-01-03T00:00:00Z")
+
+    def test_a_malformed_added_stamp_is_refused(self):
+        self.put(text("bad", ["games"], added="yesterday"))
+        self.assertNotEqual(self.run_build()[0], 0)
+
+
 class TestMixedVoices(Sandbox):
     """A post can quote reader comments: those metaphors keep their own author and kind."""
 

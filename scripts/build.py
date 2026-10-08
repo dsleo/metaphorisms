@@ -17,6 +17,7 @@ import math
 import os
 import re
 import sys
+from datetime import datetime, timezone
 from pathlib import Path
 from urllib.parse import urlparse
 
@@ -26,6 +27,13 @@ KINDS = ("essay", "comment", "tweet")
 MAX_PER_BLOCK = 3  # keep at least one tree per block so the map can breathe
 TREE_FLOOR = 0.4   # and at least this share of all cells stays tree/park; below it the map grows instead
 FIRST_RING = 6  # blocks with max(i,j) >= 6 are the expansion area; the original 6x6 city is frozen
+
+
+STAMP = "%Y-%m-%dT%H:%M:%SZ"  # when a text was added to the city (UTC); the page uses it for "new since your last visit"
+
+
+def now_stamp():
+    return datetime.now(timezone.utc).strftime(STAMP)
 
 
 def die(msg):
@@ -146,6 +154,8 @@ def load_texts(districts):
                 die(where + f"missing '{f}'")
         if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", t["date"]):
             die(where + "date must be YYYY-MM-DD")
+        if "added" in t and not re.fullmatch(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z", str(t["added"])):
+            die(where + "'added' must look like 2026-10-08T13:10:41Z (UTC)")
         if not re.fullmatch(r"https?://[^\s\"'<>]+", t["url"]):
             die(where + "url must be a plain http(s) URL (no spaces, quotes or angle brackets)")
         if t["kind"] not in KINDS:
@@ -185,7 +195,9 @@ def reconcile(data, texts):
         if {c: len(v) for c, v in want.items()} != {c: len(v) for c, v in built.items()}:
             die(f"{tid}: metaphors per district differ from the built city; that would move buildings. "
                 "Wording can be edited freely, but keep the same number of metaphors in each district.")
-        data["S"][tid] = {"t": t["title"], "u": t["url"], "d": t["date"]}
+        data["S"][tid].update(t=t["title"], u=t["url"], d=t["date"])  # keeps its "a" (added) stamp
+        if t.get("added"):
+            data["S"][tid]["a"] = t["added"]  # lets an old text be back-dated once
         for c, ms in want.items():
             for k, m in zip(built[c], ms):
                 a, kind = voice(t, m)
@@ -210,8 +222,8 @@ def freeze_style_index(data):
 
 
 # ---------- placement ----------
-def add_text(data, t, avail):
-    data["S"][t["id"]] = {"t": t["title"], "u": t["url"], "d": t["date"]}
+def add_text(data, t, avail, stamp):
+    data["S"][t["id"]] = {"t": t["title"], "u": t["url"], "d": t["date"], "a": t.get("added") or stamp}
     per = collections.OrderedDict()
     for m in t["metaphors"]:
         a, kind = voice(t, m)
@@ -353,13 +365,14 @@ def main():
     reconcile(data, texts := load_texts([c["id"] for c in data["clusters"]] + sorted(avail)))
     freeze_style_index(data)
     known = {i: (v["t"], v["u"]) for i, v in data["S"].items()}
+    stamp = now_stamp()
     for t in sorted((t for i, t in texts.items() if i not in data["S"]), key=lambda t: (t["date"], t["id"])):
         dup = None if t.get("duplicate_ok") else find_duplicate(t["title"], t["url"], known)
         if dup:
             die(f"{t['id']} looks like a duplicate of {dup} ({known[dup][0]!r}). If it really is a different text, "
                 'add "duplicate_ok": true to its JSON; otherwise delete texts/' + t["id"] + ".json.")
         known[t["id"]] = (t["title"], t["url"])
-        add_text(data, t, avail)
+        add_text(data, t, avail, stamp)
     label_new_districts(data)
     refresh_decor(data)
     refresh_links(data)
