@@ -14,7 +14,9 @@
     {
       "district": "games",
       "title": "Olympics and Formula 1",
-      "paraphrase": "If robots outrun humans, do we cancel the Olympics? F1 already exists alongside them."
+      "paraphrase": "If robots outrun humans, do we cancel the Olympics? F1 already exists alongside them.",
+      "author": "Readers on Loh's post",
+      "kind": "comment"
     },
     {
       "district": "machines",
@@ -29,7 +31,9 @@
     {
       "district": "machines",
       "title": "Assembly versus source code",
-      "paraphrase": "Mathematicians make proofs readable as source code is to assembly; AI is Hilbert's program, humans Gödel's theorem."
+      "paraphrase": "Mathematicians make proofs readable as source code is to assembly; AI is Hilbert's program, humans Gödel's theorem.",
+      "author": "Readers on Loh's post",
+      "kind": "comment"
     }
   ]
 }

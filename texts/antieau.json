@@ -3,13 +3,15 @@
   "title": "Fast math/slow math",
   "url": "https://terrytao.wordpress.com/2026/09/15/fast-math-slow-math/",
   "date": "2026-09-15",
-  "author": "Reader on Antieau's post",
-  "kind": "comment",
+  "author": "Ben Antieau",
+  "kind": "essay",
   "metaphors": [
     {
       "district": "speed",
       "title": "Ferrari at the marathon",
-      "paraphrase": "Using AI is like showing up to a marathon in a Ferrari, or with steroids; cars got their own sport, Formula 1."
+      "paraphrase": "Using AI is like showing up to a marathon in a Ferrari, or with steroids; cars got their own sport, Formula 1.",
+      "author": "Reader on Antieau's post",
+      "kind": "comment"
     },
     {
       "district": "food",

@@ -123,6 +123,34 @@ class TestExtension(Sandbox):
         self.assertNotEqual(self.run_build()[0], 0)
 
 
+class TestMixedVoices(Sandbox):
+    """A post can quote reader comments: those metaphors keep their own author and kind."""
+
+    def test_metaphor_level_author_and_kind_survive_build_and_edits(self):
+        mixed = text("mixd", ["games", "war"])
+        mixed["metaphors"][1].update(author="Readers on Mixd's post", kind="comment")
+        self.put(mixed)
+        self.assertEqual(self.run_build()[0], 0)
+        rows = [r for r in self.data()["rows"] if r["s"] == "mixd"]
+        self.assertEqual([(r["a"], r["k"]) for r in rows], [("T. Author", "essay"), ("Readers on Mixd's post", "comment")])
+        self.assertIn("| T. Author | Essay about mixd things | essay + comment |", build.README.read_text(encoding="utf-8"))
+        mixed["metaphors"][0]["paraphrase"] = "reworded"  # the next run must not flatten the voices
+        self.put(mixed)
+        self.assertEqual(self.run_build()[0], 0)
+        rows = [r for r in self.data()["rows"] if r["s"] == "mixd"]
+        self.assertEqual([(r["a"], r["k"]) for r in rows], [("T. Author", "essay"), ("Readers on Mixd's post", "comment")])
+
+    def test_committed_mixed_texts_keep_their_readers(self):
+        rows = [r for r in self.data()["rows"] if r["s"] == "sahai"]
+        self.assertEqual({(r["a"], r["k"]) for r in rows}, {("Amit Sahai", "essay"), ("Reader on Sahai's post", "comment")})
+
+    def test_bad_metaphor_kind_is_refused(self):
+        bad = text("mixd", ["games"])
+        bad["metaphors"][0]["kind"] = "poem"
+        self.put(bad)
+        self.assertNotEqual(self.run_build()[0], 0)
+
+
 class TestValidation(Sandbox):
     def test_duplicate_title_or_url_is_refused_unless_allowed(self):
         self.put(text("copy", ["games"], title="Math, accelerating toward light speed"))

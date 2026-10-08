@@ -24,12 +24,16 @@
     {
       "district": "food",
       "title": "IKEA versus artisanal theorems",
-      "paraphrase": "Affordable consistent output versus handmade furniture; perhaps an appetite for artisanal theorems."
+      "paraphrase": "Affordable consistent output versus handmade furniture; perhaps an appetite for artisanal theorems.",
+      "author": "Reader on Gowers's post",
+      "kind": "comment"
     },
     {
       "district": "machines",
       "title": "Telescopes and colliders",
-      "paraphrase": "AI as scientific instrument: correspondence telescopes, counterexample colliders, the denominator fallacy."
+      "paraphrase": "AI as scientific instrument: correspondence telescopes, counterexample colliders, the denominator fallacy.",
+      "author": "Reader on Gowers's post",
+      "kind": "comment"
     }
   ]
 }

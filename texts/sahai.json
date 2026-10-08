@@ -3,18 +3,22 @@
   "title": "We’re gonna need a lot more mathematicians",
   "url": "https://terrytao.wordpress.com/2026/09/24/were-gonna-need-a-lot-more-mathematicians/",
   "date": "2026-09-24",
-  "author": "Reader on Sahai's post",
-  "kind": "comment",
+  "author": "Amit Sahai",
+  "kind": "essay",
   "metaphors": [
     {
       "district": "terrain",
       "title": "Helicopter to the summit, or to Narnia",
-      "paraphrase": "Using AI on old problems is a helicopter to a familiar summit; real discovery would be a helicopter into a strange, fertile Narnia."
+      "paraphrase": "Using AI on old problems is a helicopter to a familiar summit; real discovery would be a helicopter into a strange, fertile Narnia.",
+      "author": "Reader on Sahai's post",
+      "kind": "comment"
     },
     {
       "district": "games",
       "title": "Endgame tablebases",
-      "paraphrase": "Chess ignored superhuman tablebase mates via the 50-move rule; math could ignore results humans can't verify."
+      "paraphrase": "Chess ignored superhuman tablebase mates via the 50-move rule; math could ignore results humans can't verify.",
+      "author": "Reader on Sahai's post",
+      "kind": "comment"
     },
     {
       "district": "cosmos",
