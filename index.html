@@ -1098,7 +1098,7 @@ function setFocus(id){
 function clearSel(){ if(sel!==null) DATA.buildings[sel].el.classList.remove("sel"); sel=null; kin(null); }
 function closePanel(){ $("panel").classList.remove("open"); }
 function openPanel(html){ const p=$("panel"); p.innerHTML=`<button class="close" type="button" aria-label="Close">×</button>`+html; p.classList.add("open"); p.querySelector(".close").onclick=back; p.scrollTop=0; }
-function overview(){ clearSel(); setFocus(null); closePanel(); flyTo(homeBox()); }
+function overview(){ clearSel(); setFocus(null); closePanel(); flyTo(homeBox()); syncHash(); }
 function back(){ if(sel!==null&&focus){ clearSel(); openDistrict(focus,{fly:false}); } else overview(); }
 function center(b){ const c=P(b.x+b.w/2,b.y+b.w/2,18); return c; }
 function kin(b){
@@ -1116,6 +1116,7 @@ function openDistrict(id,{fly=true}={}){
     <h3>Buildings</h3><ul>${bs.map(b=>`<li><button type="button" data-goto="${b.i}"><span class="dot"></span>${esc(b.src.t)}</button></li>`).join("")}</ul>
     <h3>Next-door districts</h3><ul>${nb.slice(0,6).map(n=>`<li><button type="button" data-district="${n.id}"><span class="dot"></span>${esc(CN[n.id])}</button></li>`).join("")}</ul>`);
   if(fly){ const [x0,y0,x1,y1]=districtBox(id); flyTo(fitBox(x0-30,y0-20,x1+30,y1+20,isMobile()?12:30)); }
+  syncHash();
 }
 function openBuilding(i){
   const b=DATA.buildings[i]; if(focus!==b.c) setFocus(b.c);
@@ -1133,6 +1134,7 @@ function openBuilding(i){
   $("toD").onclick=()=>{ clearSel(); openDistrict(b.c,{fly:false}); };
   const w=svg.clientWidth,h=svg.clientHeight,k=Math.max(T.k,KHOME*2.2),c=center(b), cx=w>720?(w-380)/2:w/2, cy=w>720?h/2+40:h*.3;
   flyTo({k,x:cx-c[0]*k,y:cy-c[1]*k});
+  syncHash();
 }
 const tip=$("tip");
 svg.addEventListener("pointerover",e=>{ const g=e.target.closest(".bld"); if(!g||pts.size) return; const b=DATA.buildings[+g.dataset.b];
@@ -1172,6 +1174,7 @@ function search(){
   const ni=hits.reduce((s,b)=>s+b.n,0);
   $("status").textContent=q?(hits.length?`${hits.length} matching building${hits.length>1?"s":""}. Enter to frame them.`:"Nothing matches. Try a shorter word."):"";
   if(q&&focus){ clearSel(); setFocus(null); closePanel(); }
+  syncHash(true);
   return hits;
 }
 $("q").addEventListener("input",search);
@@ -1214,6 +1217,37 @@ function setStyle(id){
   try{ localStorage.setItem("city-style",s.id); }catch(e){}
 }
 document.querySelectorAll(".sopt").forEach(b=>b.onclick=()=>{ setStyle(b.dataset.style); styleMenu(false); $("stylebtn").focus(); });
+/* ================= DEEP LINKS: the view lives in the URL hash ================= */
+// #d=<district>  |  #t=<textId>&d=<district> (a building)  |  #q=<search>   (q can be combined with the others)
+let applying=true; // true at startup and while a hash is being applied, so the view is not written back over it
+function hashFor(){
+  const p=new URLSearchParams();
+  if(sel!==null){ const b=DATA.buildings[sel]; p.set("t",b.s); p.set("d",b.c); } else if(focus) p.set("d",focus);
+  const q=$("q").value.trim(); if(q) p.set("q",q);
+  const h=p.toString(); return h?"#"+h:"";
+}
+function syncHash(replace=false){
+  if(applying) return;
+  const h=hashFor();
+  if(h!==(location.hash==="#"?"":location.hash)){
+    try{ history[replace?"replaceState":"pushState"](null,"",location.pathname+location.search+h); }catch(e){} // e.g. sandboxed frames
+  }
+  document.title=sel!==null?`${DATA.buildings[sel].src.t} · Metaphorisms`:focus?`${CN[focus]} · Metaphorisms`:"Metaphorisms";
+}
+function applyHash(){
+  const p=new URLSearchParams(location.hash.slice(1)), q=p.get("q")||"", d=p.get("d"), t=p.get("t");
+  applying=true;
+  try{
+    if($("q").value!==q){ $("q").value=q; search(); if(q) searchPop(true); }
+    const b=t&&DATA.buildings.find(x=>x.s===t&&(!d||x.c===d));
+    if(b) openBuilding(b.i);
+    else if(d&&CN[d]) openDistrict(d);
+    else if(sel!==null||focus) overview();
+  } finally { applying=false; }
+  syncHash(true); // normalise the URL and the tab title
+}
+addEventListener("popstate",applyHash); // back/forward, or an edited/pasted hash
+
 /* ================= REPLAY: the city appearing text by text, in date order ================= */
 const RP={state:"idle",steps:[],i:0,timer:0};
 const RPI={play:`<svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>`,pause:`<svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true"><path d="M8.5 5v14M15.5 5v14"/></svg>`};
@@ -1248,7 +1282,7 @@ $("replaystop").onclick=replayStop;
 replayUI();
 T=homeBox(); KHOME=T.k;
 let saved=null; try{ saved=localStorage.getItem("city-style"); }catch(e){} setStyle(saved||"night");
-apply(); search();
+apply(); search(); applyHash();
 let rt; addEventListener("resize",()=>{clearTimeout(rt); rt=setTimeout(()=>{ KHOME=homeBox().k; if(!focus){T=homeBox();apply();} },150);});
 },0));
 </script>
