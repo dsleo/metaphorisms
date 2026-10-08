@@ -19,36 +19,40 @@ The short descriptions of each metaphor are paraphrases written while reading th
 
 ## Sources
 
-- Daniel Litt, [Mathematics in the Library of Babel](https://www.daniellitt.com/blog/2026/2/20/mathematics-in-the-library-of-babel/) (2026-02-21)
-- Alex Kontorovich, [Interactions of AI with research math and formalization](https://alexkontorovich.wordpress.com/2026/04/05/lecture-interactions-of-ai-with-research-math-and-formalization-at-newton-insitute-cambridge/) (2026-04-05)
-- David Bessis, [The fall of the theorem economy](https://davidbessis.substack.com/p/the-fall-of-the-theorem-economy) (2026-04-21)
-- Timothy Gowers, [Thoughts about the Leiden Declaration](https://gowers.wordpress.com/2026/07/26/thoughts-about-the-leiden-declaration/) (2026-07-26)
-- Peter Woit, [Requiem for a Field?](https://www.math.columbia.edu/~woit/wordpress/?p=15787) (2026-07-26)
-- Max Weinreich, [The crisis of AI-generated mathematics (arXiv 2608.02859)](https://arxiv.org/abs/2608.02859) (2026-08-03)
-- Daniel Litt, [The End of Mathematics](https://www.daniellitt.com/blog/2026/8/11/the-end-of-mathematics/) (2026-08-11)
-- Timothy Gowers, [What sort of maths are LLMs good at?](https://gowers.wordpress.com/2026/08/12/what-sort-of-maths-are-llms-good-at/) (2026-08-12)
-- Terence Tao, [Mathematics in the age of AI (arXiv 2608.16753)](https://arxiv.org/abs/2608.16753) (2026-08-17)
-- Bruce Schneier and Kasra Rafi, [AI Doesn’t Mean the End of Mathematics—at Least Not Yet](https://www.schneier.com/blog/archives/2026/08/ai-doesnt-mean-the-end-of-mathematics-at-least-not-yet.html) (2026-08-25)
-- Hugo Duminil-Copin, [Care for a little more AI?](https://proofsandprompts.com/2026/08/30/care-for-a-little-more-ai/) (2026-08-30)
-- Logan Graves, [Priest, Monk, and Mathematician](https://logangraves.com/priest-monk-mathematician) (2026-09-10)
-- Steven Strogatz, [Wimbledon, the U.S. Open, and the future of mathematics](https://terrytao.wordpress.com/2026/09/12/wimbledon-the-u-s-open-and-the-future-of-mathematics/) (2026-09-12)
-- Daniel Litt, [A beginning for mathematics](https://www.daniellitt.com/blog/2026/9/13/a-beginning-for-mathematics/) (2026-09-13)
-- Emily Riehl, [Why I do mathematical research](https://terrytao.wordpress.com/2026/09/14/why-i-do-mathematical-research/) (2026-09-14)
-- Henry Cohn, [The technical debt of AI-generated mathematics](https://terrytao.wordpress.com/2026/09/15/the-technical-debt-of-ai-generated-mathematics/) (2026-09-15)
-- Ben Antieau, [Fast math/slow math](https://terrytao.wordpress.com/2026/09/15/fast-math-slow-math/) (2026-09-15)
-- Po-Shen Loh, [Why Do We Need Human Mathematicians Anymore?](https://terrytao.wordpress.com/2026/09/19/why-do-we-need-human-mathematicians-anymore/) (2026-09-19)
-- Alexander Gamburd, [The Siren Call of Silicon Leviathan (arXiv 2609.28591)](https://arxiv.org/abs/2609.28591) (2026-09-23)
-- Amit Sahai, [We’re gonna need a lot more mathematicians](https://terrytao.wordpress.com/2026/09/24/were-gonna-need-a-lot-more-mathematicians/) (2026-09-24)
-- Vladimir Lazić, [Rulers of the childless land: A response to the AGMAI](https://proofsandprompts.com/2026/09/24/rulers-of-the-childless-land-a-response-to-the-agmai/) (2026-09-24)
-- Michael Harris, [The essay on the Navier-Stokes story that everyone should read](https://siliconreckoner.substack.com/p/the-essay-on-the-navier-stokes-story) (2026-09-30)
-- Pierre Marion, [The Future of Research in the Age of AI](https://pierremarion23.github.io/thoughts/2026-10-01.html) (2026-10-01)
-- Kevin Buzzard, [To grieve, or not to grieve?](https://xenaproject.wordpress.com/2026/10/01/to-grieve-or-not-to-grieve/) (2026-10-01)
-- Ethan Sussman, [Only Anatevka](https://proofsandprompts.com/2026/10/02/only-anatevka/) (2026-10-02)
-- Christian Szegedy, [Is Mathematics Over, or Just Graduating?](https://docs.google.com/document/d/e/2PACX-1vTSh-pyNP3Gi99WMmsinnLmE9V5CDI0HEm6WGbIPMNt3V5SGlClHF8-BetotKHOImrvQDSXmFdiOw8D/pub) (2026-10-03)
-- Jennifer Taback, [What does the advent of powerful AI models mean for mathematicians like me?](https://terrytao.wordpress.com/2026/10/03/what-does-the-advent-of-powerful-ai-models-mean-for-mathematicians-like-me/) (2026-10-03)
-- Anonymous postdoc, [The diggers](https://proofsandprompts.com/2026/10/04/the-diggers/) (2026-10-04)
-- Justin Asher, [Math, accelerating toward light speed](https://justinasher.me/math-approaching-light-speed) (2026-10-05)
-- Jeremy Avigad, [The Future of Mathematics](https://terrytao.wordpress.com/2026/10/05/the-future-of-mathematics/) (2026-10-05)
+The 30 texts currently in the city, oldest first. *Type* is `essay` (a post or paper) or `comment` (reader comments on a post). *Topics* are the districts where the text has buildings, most metaphors first. *ID* is the key in `DATA.S` in `index.html`.
+
+| Date | Authors | Title | Type | Topics (districts) | Metaphors | URL | ID |
+|---|---|---|---|---|---|---|---|
+| 2026-02-21 | Daniel Litt | Mathematics in the Library of Babel | essay | Terrain and exploration | 2 | [daniellitt.com](https://www.daniellitt.com/blog/2026/2/20/mathematics-in-the-library-of-babel/) | `littBabel` |
+| 2026-04-05 | Alex Kontorovich | Interactions of AI with research math and formalization | essay | Buildings and libraries | 1 | [alexkontorovich.wordpress.com](https://alexkontorovich.wordpress.com/2026/04/05/lecture-interactions-of-ai-with-research-math-and-formalization-at-newton-insitute-cambridge/) | `kontorovich` |
+| 2026-04-21 | David Bessis | The fall of the theorem economy | essay | Economy and debt, Terrain and exploration, Empire, war and resistance, Software and machines, Vehicles and speed, Buildings and libraries, Games and sport, Food and craft | 14 | [davidbessis.substack.com](https://davidbessis.substack.com/p/the-fall-of-the-theorem-economy) | `bessis` |
+| 2026-07-26 | Reader on Gowers's post | Thoughts about the Leiden Declaration | comment | Grief, death and ruin, Food and craft, Software and machines | 5 | [gowers.wordpress.com](https://gowers.wordpress.com/2026/07/26/thoughts-about-the-leiden-declaration/) | `gowersLeiden` |
+| 2026-07-26 | Peter Woit | Requiem for a Field? | essay | Grief, death and ruin, Games and sport | 2 | [math.columbia.edu](https://www.math.columbia.edu/~woit/wordpress/?p=15787) | `woit` |
+| 2026-08-03 | Max Weinreich | The crisis of AI-generated mathematics (arXiv 2608.02859) | essay | Empire, war and resistance, Games and sport, Food and craft | 3 | [arxiv.org](https://arxiv.org/abs/2608.02859) | `weinreich` |
+| 2026-08-11 | Daniel Litt | The End of Mathematics | essay | Economy and debt, Digestion and the body, Software and machines | 3 | [daniellitt.com](https://www.daniellitt.com/blog/2026/8/11/the-end-of-mathematics/) | `littEnd` |
+| 2026-08-12 | Timothy Gowers | What sort of maths are LLMs good at? | essay | Games and sport | 1 | [gowers.wordpress.com](https://gowers.wordpress.com/2026/08/12/what-sort-of-maths-are-llms-good-at/) | `gowersLLM` |
+| 2026-08-17 | Terence Tao | Mathematics in the age of AI (arXiv 2608.16753) | essay | Digestion and the body, Buildings and libraries, Economy and debt | 4 | [arxiv.org](https://arxiv.org/abs/2608.16753) | `tao` |
+| 2026-08-25 | Bruce Schneier and Kasra Rafi | AI Doesn’t Mean the End of Mathematics—at Least Not Yet | essay | Software and machines | 1 | [schneier.com](https://www.schneier.com/blog/archives/2026/08/ai-doesnt-mean-the-end-of-mathematics-at-least-not-yet.html) | `schneier` |
+| 2026-08-30 | Hugo Duminil-Copin | Care for a little more AI? | essay | Terrain and exploration, Empire, war and resistance | 2 | [proofsandprompts.com](https://proofsandprompts.com/2026/08/30/care-for-a-little-more-ai/) | `duminil` |
+| 2026-09-10 | Logan Graves | Priest, Monk, and Mathematician | essay | Religion and revelation | 1 | [logangraves.com](https://logangraves.com/priest-monk-mathematician) | `graves` |
+| 2026-09-12 | Steven Strogatz | Wimbledon, the U.S. Open, and the future of mathematics | essay | Games and sport | 1 | [terrytao.wordpress.com](https://terrytao.wordpress.com/2026/09/12/wimbledon-the-u-s-open-and-the-future-of-mathematics/) | `strogatz` |
+| 2026-09-13 | Daniel Litt | A beginning for mathematics | essay | Economy and debt, Software and machines, Cosmos and civilization | 3 | [daniellitt.com](https://www.daniellitt.com/blog/2026/9/13/a-beginning-for-mathematics/) | `littBeg` |
+| 2026-09-14 | Emily Riehl | Why I do mathematical research | essay | Terrain and exploration | 1 | [terrytao.wordpress.com](https://terrytao.wordpress.com/2026/09/14/why-i-do-mathematical-research/) | `riehl` |
+| 2026-09-15 | Ben Antieau | Fast math/slow math | essay | Vehicles and speed, Food and craft, Cosmos and civilization | 3 | [terrytao.wordpress.com](https://terrytao.wordpress.com/2026/09/15/fast-math-slow-math/) | `antieau` |
+| 2026-09-15 | Henry Cohn | The technical debt of AI-generated mathematics | essay | Economy and debt | 1 | [terrytao.wordpress.com](https://terrytao.wordpress.com/2026/09/15/the-technical-debt-of-ai-generated-mathematics/) | `cohn` |
+| 2026-09-19 | Readers on Loh's post | Why Do We Need Human Mathematicians Anymore? | comment | Software and machines, Vehicles and speed, Games and sport | 5 | [terrytao.wordpress.com](https://terrytao.wordpress.com/2026/09/19/why-do-we-need-human-mathematicians-anymore/) | `loh` |
+| 2026-09-23 | Alexander Gamburd | The Siren Call of Silicon Leviathan (arXiv 2609.28591) | essay | Religion and revelation, Empire, war and resistance, Games and sport | 9 | [arxiv.org](https://arxiv.org/abs/2609.28591) | `gamburd` |
+| 2026-09-24 | Readers on Lazić's post | Rulers of the childless land: A response to the AGMAI | comment | Empire, war and resistance, Food and craft | 2 | [proofsandprompts.com](https://proofsandprompts.com/2026/09/24/rulers-of-the-childless-land-a-response-to-the-agmai/) | `lazic` |
+| 2026-09-24 | Amit Sahai | We’re gonna need a lot more mathematicians | essay | Terrain and exploration, Games and sport, Cosmos and civilization | 3 | [terrytao.wordpress.com](https://terrytao.wordpress.com/2026/09/24/were-gonna-need-a-lot-more-mathematicians/) | `sahai` |
+| 2026-09-30 | Michael Harris | The essay on the Navier-Stokes story that everyone should read | essay | Empire, war and resistance | 1 | [siliconreckoner.substack.com](https://siliconreckoner.substack.com/p/the-essay-on-the-navier-stokes-story) | `harris` |
+| 2026-10-01 | Kevin Buzzard | To grieve, or not to grieve? | essay | Terrain and exploration, Religion and revelation, Empire, war and resistance, Grief, death and ruin, Games and sport, Software and machines, Cosmos and civilization | 7 | [xenaproject.wordpress.com](https://xenaproject.wordpress.com/2026/10/01/to-grieve-or-not-to-grieve/) | `buzzard` |
+| 2026-10-01 | Pierre Marion | The Future of Research in the Age of AI | essay | Terrain and exploration, Vehicles and speed, Economy and debt | 3 | [pierremarion23.github.io](https://pierremarion23.github.io/thoughts/2026-10-01.html) | `marion` |
+| 2026-10-02 | Ethan Sussman | Only Anatevka | essay | Empire, war and resistance | 1 | [proofsandprompts.com](https://proofsandprompts.com/2026/10/02/only-anatevka/) | `sussman` |
+| 2026-10-03 | Christian Szegedy | Is Mathematics Over, or Just Graduating? | essay | Terrain and exploration, Vehicles and speed, Grief, death and ruin | 6 | [docs.google.com](https://docs.google.com/document/d/e/2PACX-1vTSh-pyNP3Gi99WMmsinnLmE9V5CDI0HEm6WGbIPMNt3V5SGlClHF8-BetotKHOImrvQDSXmFdiOw8D/pub) | `szegedy` |
+| 2026-10-03 | Jennifer Taback | What does the advent of powerful AI models mean for mathematicians like me? | essay | Software and machines | 1 | [terrytao.wordpress.com](https://terrytao.wordpress.com/2026/10/03/what-does-the-advent-of-powerful-ai-models-mean-for-mathematicians-like-me/) | `taback` |
+| 2026-10-04 | Anonymous postdoc | The diggers | essay | Empire, war and resistance | 1 | [proofsandprompts.com](https://proofsandprompts.com/2026/10/04/the-diggers/) | `diggers` |
+| 2026-10-05 | Justin Asher | Math, accelerating toward light speed | essay | Vehicles and speed, Buildings and libraries, Economy and debt, Games and sport | 4 | [justinasher.me](https://justinasher.me/math-approaching-light-speed) | `asher` |
+| 2026-10-05 | Jeremy Avigad | The Future of Mathematics | essay | Terrain and exploration, Cosmos and civilization | 2 | [terrytao.wordpress.com](https://terrytao.wordpress.com/2026/10/05/the-future-of-mathematics/) | `avigad` |
 
 ## Credits
 
