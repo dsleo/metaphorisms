@@ -65,12 +65,10 @@ def fetch(url):
             "text": re.sub(r"\n\s*\n+", "\n\n", "".join(p.text)).strip()[:MAX_CHARS]}
 
 
-def prompt(page, url, data, force=False):
+def prompt(page, url, data):
     ex = {}
     for r in data["rows"]:
         ex.setdefault(r["c"], []).append(r["t"])
-    au = {r["s"]: r["a"] for r in data["rows"]}
-    texts = "\n".join(f'- {k}: {v["t"]!r} by {au[k]}, {v["d"]}, {v["u"]}' for k, v in data["S"].items())
     dist = "\n".join(f'- {c["id"]}: {c["name"]} (e.g. {"; ".join(ex.get(c["id"], [])[:4])})' for c in data["clusters"])
     return f"""You catalogue the metaphors that mathematicians and writers use when talking about AI and mathematics.
 Read the text below and list its distinct metaphors/analogies/images (not plain arguments). For each:
@@ -79,8 +77,6 @@ Read the text below and list its distinct metaphors/analogies/images (not plain 
 - paraphrase: one or two sentences in your own words (never quote), saying what the image says about AI/mathematics.
 - style_hint: one sentence describing the building to draw for this image (concrete shapes and objects).
 Also give: id (camelCase, author's surname plus a short word if needed), title, author (display name; "Readers on X's post" for comment threads), kind ("essay" or "comment"), date (YYYY-MM-DD, use the hint if given).
-Also set duplicate_of: the id of a text already in the city if this page is the same piece (a repost on another site, a mirror, or a comment thread on it, even with another URL or title), else "". Already in the city:
-{texts}
 Be selective: only real, vivid metaphors, between 1 and 8. Existing metaphors in the city, for calibration:
 {dist}
 
@@ -91,8 +87,8 @@ TEXT:
 
 
 SCHEMA = {"type": "object", "additionalProperties": False,
-          "required": ["duplicate_of", "id", "title", "author", "kind", "date", "metaphors"],
-          "properties": {"duplicate_of": {"type": "string"}, "id": {"type": "string"}, "title": {"type": "string"}, "author": {"type": "string"},
+          "required": ["id", "title", "author", "kind", "date", "metaphors"],
+          "properties": {"id": {"type": "string"}, "title": {"type": "string"}, "author": {"type": "string"},
                          "kind": {"type": "string", "enum": ["essay", "comment"]}, "date": {"type": "string"},
                          "metaphors": {"type": "array", "items": {"type": "object", "additionalProperties": False,
                              "required": ["district", "new_district", "title", "paraphrase", "style_hint"],
@@ -146,15 +142,12 @@ def main():
     _, data, _, _ = build.load_html()
     page = fetch(url)
     known = {i: (v["t"], v["u"]) for i, v in data["S"].items()}
-    dup = None if force else build.find_duplicate(page["title"], url, known)
+    dup = None if force else build.find_duplicate(page["title"], url, known)  # before any LLM call
     if dup:
         sys.exit(f"Already in the city as {dup!r} ({known[dup][0]!r}, {known[dup][1]}). Use --force to add it anyway.")
     if len(page["text"]) < 500:
         sys.exit("Fetched too little text (paywall/JS page?). Paste the text into a file or use a Claude Code session.")
-    resp = ask(prompt(page, url, data), model)
-    if resp["duplicate_of"] in known and not force:
-        sys.exit(f"Already in the city as {resp['duplicate_of']!r} ({known[resp['duplicate_of']][0]!r}): same content under another URL. Use --force to add it anyway.")
-    out, new = write_draft(resp, url, page, [c["id"] for c in data["clusters"]], force)
+    out, new = write_draft(ask(prompt(page, url, data), model), url, page, [c["id"] for c in data["clusters"]], force)
     print(f"Draft: {out.relative_to(build.ROOT)}")
     return out, new
 

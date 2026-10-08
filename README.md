@@ -68,12 +68,14 @@ You can also write `texts/<id>.json` by hand (the id is a short camelCase key, e
 - `kind` is `essay` or `comment`; `district` is one of the 12 existing district ids (see `DATA.clusters`).
 - Then run `python3 scripts/build.py`.
 
-The city only ever grows: existing buildings are never moved, restyled or removed. For each new building, `build.py` looks for a place in this order:
-1. **A tree cell in a block of the same district** (original or new): the tree is replaced by the building. Each block keeps at least one tree so the map can breathe, so a block takes at most 3 single buildings.
+The city only ever grows: existing buildings are never moved, restyled or removed. Two rules keep it airy: every block keeps at least one tree, and at least 40% of all cells on the map stay trees or park (`TREE_FLOOR` in `build.py`). For each new building, `build.py` looks for a place in this order:
+1. **A tree cell in a block of the same district** (original or new), if both rules still hold afterwards: the tree is replaced by the building.
 2. **An unexplored block in the new area**: an L-shaped ring along the right/bottom edges, drawn as park until a district claims it. A text with 3 or more metaphors in one district gets a whole block.
-3. **A new ring**, when no unexplored block is left.
+3. **A new ring**, whenever no unexplored block is left or the 40% floor would be broken. Each ring adds a lot of park, which is what makes room for further replacements.
 
-Duplicates are refused: `add.py` stops if the URL or title matches a text already in the city, or if the model recognises the same content under another URL (a repost, a comment thread); `build.py` applies the same URL/title check to new files. `--force` (and `"duplicate_ok": true` in the JSON) overrides it. Editing the wording of an existing text is fine as long as it keeps the same number of metaphors per district.
+The park blocks of the original map (the ones that belong to no district) are never claimed.
+
+Duplicates are caught before any LLM call: `add.py` stops if the URL or title matches a text already in the city (`--force` overrides it). `build.py` applies the same check to new files (`"duplicate_ok": true` in the JSON overrides it). Editing the wording of an existing text is fine as long as it keeps the same number of metaphors per district.
 
 ## Notes
 

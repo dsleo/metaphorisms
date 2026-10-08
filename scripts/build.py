@@ -17,6 +17,7 @@ ROOT = Path(__file__).resolve().parent.parent
 HTML, README, TEXTS = ROOT / "index.html", ROOT / "README.md", ROOT / "texts"
 KINDS = ("essay", "comment")
 MAX_PER_BLOCK = 3  # keep at least one tree per block so the map can breathe
+TREE_FLOOR = 0.4   # and at least this share of all cells stays tree/park; below it the map grows instead
 FIRST_RING = 6  # blocks with max(i,j) >= 6 are the expansion area; the original 6x6 city is frozen
 
 
@@ -153,15 +154,21 @@ def add_text(data, t):
         data["buildings"].append(b)  # append only: a building's drawing seed is its index
 
 
+def room(data, n):
+    """Can n more cells be built on while the whole map keeps TREE_FLOOR of its cells as trees?"""
+    total = 4 * data["NB"] ** 2
+    return (total - len({p for b in data["buildings"] for p in footprint(b)}) - n) / total >= TREE_FLOOR
+
+
 def pick_slot(data, c, w):
     blocks = data["blocks"]
     used = {p for b in data["buildings"] for p in footprint(b)}
-    if w == 1:  # replace a tree in a block of this district (original or new), keeping the block breathing
+    if w == 1 and room(data, 1):  # replace a tree in a block of this district (original or new)
         spots = [[p for p in cells(bk) if p not in used] for bk in blocks if bk["c"] == c and not bk.get("open")]
-        spots = [f for f in spots if len(f) > 4 - MAX_PER_BLOCK]
+        spots = [f for f in spots if len(f) > 4 - MAX_PER_BLOCK]  # the block keeps a tree
         if spots:
             return max(spots, key=len)[0]  # the block with the most trees left (first one on ties)
-    while not any(bk.get("open") for bk in blocks):
+    while not any(bk.get("open") for bk in blocks) or not room(data, 1 if w == 1 else 4):
         grow(data)
     mine = [bk for bk in blocks if bk["c"] == c and frontier(bk)]
     if mine:  # stay next to what this district already built out here
