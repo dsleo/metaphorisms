@@ -10,22 +10,45 @@ Each district is a family of images (games and sport, religion, economy, terrain
 
 - `index.html`: the whole site in one file (no build step, no external requests).
 - `texts/`: one JSON file per text (the input of the build script).
-- `scripts/build.py`: adds new texts to the city (see below).
+- `scripts/`: `add.py` (URL to draft), `build.py` (draft to city), `run.py` (both, then open the page); see below.
 - `fonts/`: subset woff2 fonts, loaded on demand.
 - `FONT-LICENSE-OFL.txt`: licence for the embedded fonts.
 - `.nojekyll`: tells GitHub Pages to serve the files as they are.
 
 ## Adding a text
 
-From a URL, let an LLM draft the file (blog post, arXiv page or tweet; needs an OpenAI key):
+### How it works
 
-```bash
-OPENAI_API_KEY=sk-... python3 scripts/add.py https://example.com/post
+```
+URL ──add.py──▶ texts/<id>.json ──(you review)──▶ build.py ──▶ index.html + README table
+      LLM draft   one file per text                 deterministic, additions only
 ```
 
-It writes `texts/<id>.json` and stops, so you can review the metaphors first. If a metaphor fits none of the existing districts, the draft goes to `texts/_pending/` instead (ignored by the build): a new district needs building art, which is done by hand in a Claude Code session.
+1. **`scripts/add.py <url>`** fetches the page (blog post, arXiv page, tweet) and asks an LLM to draft `texts/<id>.json`: title, author, date, and each metaphor with a district, a paraphrase and a `style_hint` (what its building should look like).
+2. **You review the draft.** If a metaphor fits none of the 12 districts, the draft goes to `texts/_pending/` (ignored by the build): a new district needs hand-made building art, done in a Claude Code session.
+3. **`scripts/build.py`** places the new buildings, recomputes the links between districts and regenerates the table below. The LLM never touches `index.html`; only this deterministic script does, and it refuses any change that would move or restyle what is already built.
 
-Or create `texts/<id>.json` (the id is a short camelCase key, e.g. `littBabel`):
+### Running it
+
+One-time setup: put your key in `.env` (git-ignored) as `OPENAI_API_KEY=sk-...`. The default model is `gpt-6-luna`; override with `--model` or `OPENAI_MODEL`. Python 3 only, no dependencies.
+
+```bash
+python3 scripts/run.py https://example.com/post   # draft + build + open index.html to look at it
+```
+
+or step by step:
+
+```bash
+python3 scripts/add.py https://example.com/post   # writes texts/<id>.json and stops
+# edit it if needed, then:
+python3 scripts/build.py                          # --check: only report whether things are up to date
+```
+
+To throw a result away: `git checkout index.html README.md && rm texts/<id>.json`.
+
+### The text file
+
+You can also write `texts/<id>.json` by hand (the id is a short camelCase key, e.g. `littBabel`):
 
 ```json
 {
@@ -43,7 +66,7 @@ Or create `texts/<id>.json` (the id is a short camelCase key, e.g. `littBabel`):
 ```
 
 - `kind` is `essay` or `comment`; `district` is one of the 12 existing district ids (see `DATA.clusters`).
-- Then run `python3 scripts/build.py`. It places the new buildings, recomputes the links between districts and regenerates the table below. `--check` only reports whether everything is up to date.
+- Then run `python3 scripts/build.py`.
 
 The city only ever grows. The original 6×6 blocks are frozen: new texts are built in a new L-shaped ring of unexplored blocks along the right/bottom edges (each block keeps at least one tree so the map can breathe, each district claims the free blocks nearest to it, and the plate grows by one ring when the frontier is full). A text with 3 or more metaphors in one district gets a whole block, fewer get a single plot. The script refuses any change that would move or restyle an existing building, and editing the wording of an existing text is fine as long as it keeps the same number of metaphors per district.
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Draft texts/<id>.json from a URL with an LLM. Stops after drafting: review, then run build.py.
 
-    OPENAI_API_KEY=... python3 scripts/add.py <url> [--model gpt-4o]
+    python3 scripts/add.py <url> [--model gpt-6-luna]   # OPENAI_API_KEY from the environment or .env
 
 Only existing districts are handled automatically. If the LLM says a metaphor fits none of them,
 the draft goes to texts/_pending/ (ignored by build.py) with a note, and a new district has to be
@@ -14,7 +14,16 @@ sys.path.insert(0, str(Path(__file__).parent))
 import build
 
 MAX_CHARS = 60000
+DEFAULT_MODEL = "gpt-6-luna"
 UA = {"User-Agent": "Mozilla/5.0 (metaphorisms add.py)"}
+
+
+def load_env():  # minimal .env reader: KEY=value lines, real environment wins
+    f = build.ROOT / ".env"
+    for line in f.read_text().splitlines() if f.exists() else []:
+        k, _, v = line.partition("=")
+        if k.strip() and not line.lstrip().startswith("#"):
+            os.environ.setdefault(k.strip(), v.strip().strip("\"'"))
 
 
 def get(url, **kw):
@@ -63,7 +72,7 @@ def prompt(page, url, data):
     dist = "\n".join(f'- {c["id"]}: {c["name"]} (e.g. {"; ".join(ex.get(c["id"], [])[:4])})' for c in data["clusters"])
     return f"""You catalogue the metaphors that mathematicians and writers use when talking about AI and mathematics.
 Read the text below and list its distinct metaphors/analogies/images (not plain arguments). For each:
-- district: one id from the list below, or "NEW" if none fits (then give new_district: a short name for the missing family of images).
+- district: one id from the list below (stretch a little: districts are broad families of images; prefer the closest one), or "NEW" only if the image is clearly alien to all of them (then give new_district: a short name for the missing family of images).
 - title: 2-5 words naming the image.
 - paraphrase: one or two sentences in your own words (never quote), saying what the image says about AI/mathematics.
 - style_hint: one sentence describing the building to draw for this image (concrete shapes and objects).
@@ -118,10 +127,14 @@ def write_draft(resp, url, page, districts):
 
 
 def main():
-    args = [a for a in sys.argv[1:] if not a.startswith("--")]
+    load_env()
+    argv = sys.argv[1:]
+    model = os.environ.get("OPENAI_MODEL", DEFAULT_MODEL)
+    if "--model" in argv:
+        i = argv.index("--model"); model = argv[i + 1]; del argv[i:i + 2]
+    args = [a for a in argv if not a.startswith("--")]
     if len(args) != 1 or "OPENAI_API_KEY" not in os.environ:
         sys.exit(__doc__)
-    model = sys.argv[sys.argv.index("--model") + 1] if "--model" in sys.argv else os.environ.get("OPENAI_MODEL", "gpt-4o")
     url = args[0]
     _, data, _, _ = build.load_html()
     page = fetch(url)
@@ -129,6 +142,11 @@ def main():
         sys.exit("Fetched too little text (paywall/JS page?). Paste the text into a file or use a Claude Code session.")
     out, new = write_draft(ask(prompt(page, url, data), model), url, page, [c["id"] for c in data["clusters"]])
     print(f"Draft: {out.relative_to(build.ROOT)}")
+    return out, new
+
+
+def cli():
+    out, new = main()
     if new:
         print("Some metaphors fit no existing district: " + ", ".join(sorted(new)) +
               ".\nA new district needs building art; take this draft to a Claude Code session. build.py ignores texts/_pending/.")
@@ -137,4 +155,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    cli()
