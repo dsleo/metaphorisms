@@ -15,6 +15,18 @@ Each district is a family of images (games and sport, religion, economy, terrain
 - `FONT-LICENSE-OFL.txt`: licence for the embedded fonts.
 - `.nojekyll`: tells GitHub Pages to serve the files as they are.
 
+## Links
+
+The view is kept in the URL hash, so any view can be shared or bookmarked, and the browser's back and forward buttons move between views:
+
+| Link | Shows |
+|---|---|
+| `#d=maths` | a district (its id, see `DATA.clusters`) |
+| `#t=bessis&d=economy` | one building: a text id and the district of the building (`d` is optional) |
+| `#q=convex` | the search box filled in; combinable with the others, e.g. `#d=terrain&q=mountain` |
+
+Unknown ids fall back to the whole city. The tab title follows the selection.
+
 ## Adding a text
 
 ### How it works
