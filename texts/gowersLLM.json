@@ -1,0 +1,15 @@
+{
+  "id": "gowersLLM",
+  "title": "What sort of maths are LLMs good at?",
+  "url": "https://gowers.wordpress.com/2026/08/12/what-sort-of-maths-are-llms-good-at/",
+  "date": "2026-08-12",
+  "author": "Timothy Gowers",
+  "kind": "essay",
+  "metaphors": [
+    {
+      "district": "games",
+      "title": "Search tree and a nose",
+      "paraphrase": "LLMs explore many low-probability branches and get lucky; humans may keep an edge where the search tree needs pruning by nose."
+    }
+  ]
+}

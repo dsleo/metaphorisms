@@ -1,0 +1,80 @@
+{
+  "id": "bessis",
+  "title": "The fall of the theorem economy",
+  "url": "https://davidbessis.substack.com/p/the-fall-of-the-theorem-economy",
+  "date": "2026-04-21",
+  "author": "David Bessis",
+  "kind": "essay",
+  "metaphors": [
+    {
+      "district": "terrain",
+      "title": "Oceans between lemma and breakthrough",
+      "paraphrase": "An ocean separates a technical lemma from a serious paper, another from a breakthrough, and several more from Fields-level work."
+    },
+    {
+      "district": "terrain",
+      "title": "Surveying new continents",
+      "paraphrase": "AI may let young “intuition-maxxers” survey entire new continents at a pace that mystifies their elders."
+    },
+    {
+      "district": "speed",
+      "title": "Self-driving levels",
+      "paraphrase": "Autoformalization is no more a full solution than Tesla's Full Self-Driving; proposes a Mathematical Intelligence Scale like self-driving levels."
+    },
+    {
+      "district": "build",
+      "title": "Mathlib versus Mathslop",
+      "paraphrase": "Formal math splits into an intelligible layer and an unintelligible one; an autoformalized proof sits as an orphaned 200,000-line blob."
+    },
+    {
+      "district": "economy",
+      "title": "The theorem economy",
+      "paraphrase": "Theorems are the only currency that puts bread on the table; research mathematicians risk being demonetized."
+    },
+    {
+      "district": "economy",
+      "title": "The Overhang",
+      "paraphrase": "The latent value of connecting existing results, like unrealized capital gains of past creativity, which LLMs are placed to harvest."
+    },
+    {
+      "district": "economy",
+      "title": "Honor code and Hardy's curse",
+      "paraphrase": "Prove theorems and shut up; “the first rule of the Intuition Club”; a big conjecture as cryptographic proof of conceptual innovation."
+    },
+    {
+      "district": "economy",
+      "title": "Product recall",
+      "paraphrase": "Mathematics sold a bogus idea of itself to billions; repositioning the brand may be the largest product recall in memory."
+    },
+    {
+      "district": "war",
+      "title": "Radioactive wasteland",
+      "paraphrase": "AI companies will bomb formalization into a wasteland that can never sustain life again (Patrick Massot, quoted)."
+    },
+    {
+      "district": "war",
+      "title": "Caliper to a gunfight",
+      "paraphrase": "Also: a fox thanking the hens for the henhouse keys, collective seppuku, a “nuclear scenario” for the Riemann hypothesis."
+    },
+    {
+      "district": "games",
+      "title": "A closed system like Go",
+      "paraphrase": "Hinton calls math a closed system like Go and chess; if AI “wins,” the only loser left is human thought."
+    },
+    {
+      "district": "food",
+      "title": "Blenders and the gym",
+      "paraphrase": "Robots outlift us yet we go to the gym; blenders outchew us yet we don't eat through straws."
+    },
+    {
+      "district": "machines",
+      "title": "Doesn't compile in the brain",
+      "paraphrase": "Unintelligible proofs are meaningless because they don't compile on the only hardware that can appreciate them."
+    },
+    {
+      "district": "machines",
+      "title": "Samplers and sequencers",
+      "paraphrase": "AI may do for math what samplers did for music; standing on the shoulders of giant machines."
+    }
+  ]
+}

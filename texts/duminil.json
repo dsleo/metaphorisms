@@ -1,0 +1,20 @@
+{
+  "id": "duminil",
+  "title": "Care for a little more AI?",
+  "url": "https://proofsandprompts.com/2026/08/30/care-for-a-little-more-ai/",
+  "date": "2026-08-30",
+  "author": "Hugo Duminil-Copin",
+  "kind": "essay",
+  "metaphors": [
+    {
+      "district": "terrain",
+      "title": "Lighthouses in the night",
+      "paraphrase": "An open question is a lighthouse guiding mathematicians' wanderings; don't use our most beautiful conjectures as mere benchmarks."
+    },
+    {
+      "district": "war",
+      "title": "Bulldozers, battering rams, nukes",
+      "paraphrase": "Conjectures fall to bulldozers and battering rams; AI discoveries decapitate fields and nuke the landscape."
+    }
+  ]
+}

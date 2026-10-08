@@ -1,0 +1,25 @@
+{
+  "id": "littEnd",
+  "title": "The End of Mathematics",
+  "url": "https://www.daniellitt.com/blog/2026/8/11/the-end-of-mathematics/",
+  "date": "2026-08-11",
+  "author": "Daniel Litt",
+  "kind": "essay",
+  "metaphors": [
+    {
+      "district": "economy",
+      "title": "Slot machine for conjectures",
+      "paraphrase": "Outputs are now mispriced; the dominant career strategy becomes pulling the slot-machine lever on conjectures."
+    },
+    {
+      "district": "body",
+      "title": "Atrophying organs",
+      "paraphrase": "Organs of the community like MathOverflow are atrophying, cannibalized by Discord and then AI."
+    },
+    {
+      "district": "machines",
+      "title": "Lab science with agents",
+      "paraphrase": "Human mathematicians directing compute, doing lab science with agents."
+    }
+  ]
+}

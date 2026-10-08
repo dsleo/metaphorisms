@@ -1,0 +1,25 @@
+{
+  "id": "littBeg",
+  "title": "A beginning for mathematics",
+  "url": "https://www.daniellitt.com/blog/2026/9/13/a-beginning-for-mathematics/",
+  "date": "2026-09-13",
+  "author": "Daniel Litt",
+  "kind": "essay",
+  "metaphors": [
+    {
+      "district": "economy",
+      "title": "The price of a nice dinner",
+      "paraphrase": "Some basic questions can now be resolved for the marginal cost of a nice dinner, and we should be delighted."
+    },
+    {
+      "district": "machines",
+      "title": "Monkey enumerating ZFC",
+      "paraphrase": "A computer or monkey applying deduction rules from the axioms shows proving theorems is not the goal."
+    },
+    {
+      "district": "cosmos",
+      "title": "Conjecture falling in the woods",
+      "paraphrase": "If a conjecture falls in the woods and no one hears it, who cares?"
+    }
+  ]
+}

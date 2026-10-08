@@ -1,0 +1,35 @@
+{
+  "id": "loh",
+  "title": "Why Do We Need Human Mathematicians Anymore?",
+  "url": "https://terrytao.wordpress.com/2026/09/19/why-do-we-need-human-mathematicians-anymore/",
+  "date": "2026-09-19",
+  "author": "Po-Shen Loh",
+  "kind": "essay",
+  "metaphors": [
+    {
+      "district": "speed",
+      "title": "Faster than you can steer",
+      "paraphrase": "Driving faster than you can run is fine, not faster than you can steer; AI multiplies the “control points” that need skilled humans."
+    },
+    {
+      "district": "games",
+      "title": "Olympics and Formula 1",
+      "paraphrase": "If robots outrun humans, do we cancel the Olympics? F1 already exists alongside them."
+    },
+    {
+      "district": "machines",
+      "title": "A proof with a hole is a poof",
+      "paraphrase": "Also HAL 9000 and WALL-E's AUTO, and a backlash like Three Mile Island or Chernobyl."
+    },
+    {
+      "district": "machines",
+      "title": "A baby controlling its mother",
+      "paraphrase": "Hinton's only example of a less intelligent thing controlling a more intelligent one (quoted)."
+    },
+    {
+      "district": "machines",
+      "title": "Assembly versus source code",
+      "paraphrase": "Mathematicians make proofs readable as source code is to assembly; AI is Hilbert's program, humans Gödel's theorem."
+    }
+  ]
+}

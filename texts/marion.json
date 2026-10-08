@@ -1,0 +1,25 @@
+{
+  "id": "marion",
+  "title": "The Future of Research in the Age of AI",
+  "url": "https://pierremarion23.github.io/thoughts/2026-10-01.html",
+  "date": "2026-10-01",
+  "author": "Pierre Marion",
+  "kind": "essay",
+  "metaphors": [
+    {
+      "district": "terrain",
+      "title": "A narrow ridge",
+      "paraphrase": "Between a bright AI-assisted future and churning out pointless papers ever faster lies a narrow ridge."
+    },
+    {
+      "district": "speed",
+      "title": "Airline pilots",
+      "paraphrase": "Learn from professions like airline pilots that faced automation-driven skill erosion; LLMs as a superpower PhD students must learn to pilot."
+    },
+    {
+      "district": "economy",
+      "title": "Collapse of the h-index",
+      "paraphrase": "Producing papers becomes a commodity, so their value for hiring and evaluation collapses."
+    }
+  ]
+}

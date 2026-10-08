@@ -1,0 +1,40 @@
+{
+  "id": "szegedy",
+  "title": "Is Mathematics Over, or Just Graduating?",
+  "url": "https://docs.google.com/document/d/e/2PACX-1vTSh-pyNP3Gi99WMmsinnLmE9V5CDI0HEm6WGbIPMNt3V5SGlClHF8-BetotKHOImrvQDSXmFdiOw8D/pub",
+  "date": "2026-10-03",
+  "author": "Christian Szegedy",
+  "kind": "essay",
+  "metaphors": [
+    {
+      "district": "terrain",
+      "title": "Unmapped jungle",
+      "paraphrase": "Pure mathematics as lifelong exploration of a wilderness harder than the Darién Gap: mapping terrain, finding resources to fund expeditions, building gadgets."
+    },
+    {
+      "district": "terrain",
+      "title": "Rocks that become mountains",
+      "paraphrase": "Conjectures are rocks climbed mostly to test climbing tools; rarely one turns out to be a majestic mountain with a view over the whole terrain."
+    },
+    {
+      "district": "terrain",
+      "title": "Flags planted on rocks",
+      "paraphrase": "AI labs proudly planted flags on rocks explorers were already close to summiting, which upset the explorers."
+    },
+    {
+      "district": "terrain",
+      "title": "Satellites and mining",
+      "paraphrase": "Cheap planes bring satellites that map the whole terrain for deposits; extraction will be messy and corporate."
+    },
+    {
+      "district": "speed",
+      "title": "Wright brothers' airplane",
+      "paraphrase": "AI in mathematics is at the twelve-second-flight stage: primitive, expensive, improving fast. Don't bet against the airplane."
+    },
+    {
+      "district": "grief",
+      "title": "Graduation",
+      "paraphrase": "Mathematics is about to graduate; the emptiness after the last competition."
+    }
+  ]
+}

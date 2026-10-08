@@ -1,0 +1,20 @@
+{
+  "id": "woit",
+  "title": "Requiem for a Field?",
+  "url": "https://www.math.columbia.edu/~woit/wordpress/?p=15787",
+  "date": "2026-07-26",
+  "author": "Peter Woit",
+  "kind": "essay",
+  "metaphors": [
+    {
+      "district": "grief",
+      "title": "Requiem for a field",
+      "paraphrase": "Tsimerman's Fields Medal profile reads like a requiem (quoting Kevin Hartnett)."
+    },
+    {
+      "district": "games",
+      "title": "Chess where everyone has an engine",
+      "paraphrase": "Not like chess after Deep Blue, but chess where everyone secretly uses a program."
+    }
+  ]
+}

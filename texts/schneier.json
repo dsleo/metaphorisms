@@ -1,0 +1,15 @@
+{
+  "id": "schneier",
+  "title": "AI Doesn’t Mean the End of Mathematics—at Least Not Yet",
+  "url": "https://www.schneier.com/blog/archives/2026/08/ai-doesnt-mean-the-end-of-mathematics-at-least-not-yet.html",
+  "date": "2026-08-25",
+  "author": "Bruce Schneier and Kasra Rafi",
+  "kind": "essay",
+  "metaphors": [
+    {
+      "district": "machines",
+      "title": "Low-hanging fruit",
+      "paraphrase": "AI results so far are low-hanging fruit needing no extensive new theory."
+    }
+  ]
+}

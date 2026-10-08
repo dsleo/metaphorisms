@@ -1,0 +1,45 @@
+{
+  "id": "buzzard",
+  "title": "To grieve, or not to grieve?",
+  "url": "https://xenaproject.wordpress.com/2026/10/01/to-grieve-or-not-to-grieve/",
+  "date": "2026-10-01",
+  "author": "Kevin Buzzard",
+  "kind": "essay",
+  "metaphors": [
+    {
+      "district": "terrain",
+      "title": "Natural boundary",
+      "paraphrase": "Machines will stop at some boundary where the next leap is not worth the resources; humans then journey to where they stopped."
+    },
+    {
+      "district": "religion",
+      "title": "Revealed truth",
+      "paraphrase": "An unreadable AI Lean proof as a “revealed” truth, unquestionable and undemocratic (comment summarizing Gamburd)."
+    },
+    {
+      "district": "war",
+      "title": "Die on that hill",
+      "paraphrase": "Scholze will not use AI and will die on that hill (quoted)."
+    },
+    {
+      "district": "grief",
+      "title": "Five stages of grief",
+      "paraphrase": "Denial, anger, bargaining and depression all well represented in the community."
+    },
+    {
+      "district": "games",
+      "title": "Sudoku on a changing board",
+      "paraphrase": "Not ever more sudokus: the board changes shape and dimension; the team just got a superstar new player."
+    },
+    {
+      "district": "machines",
+      "title": "Lean as source of truth",
+      "paraphrase": "Decrypting Lean into English; “theoremmaxxing”; a smart kid who's an expert in the field."
+    },
+    {
+      "district": "cosmos",
+      "title": "Infinity beats exponential",
+      "paraphrase": "Mathematics is infinite, which beats exponential growth hands down."
+    }
+  ]
+}
