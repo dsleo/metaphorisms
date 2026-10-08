@@ -88,7 +88,7 @@ body.atlas .grain,body.riso .grain{display:block}
 @media (min-width:721px){ .zoom{transition:right .25s} .panel.open ~ .zoom{right:392px} }
 .zoom{position:absolute}
 #stylebtn svg{fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
-.stylemenu{position:absolute;right:52px;bottom:0;background:var(--panel);border:1px solid var(--panel-line);border-radius:10px;padding:6px;min-width:190px;box-shadow:0 6px 24px rgba(0,0,0,.25)}
+.stylemenu{position:absolute;right:52px;bottom:46px;background:var(--panel);border:1px solid var(--panel-line);border-radius:10px;padding:6px;min-width:190px;box-shadow:0 6px 24px rgba(0,0,0,.25)}
 .stylemenu[hidden]{display:none}
 .zoom .sopt{display:flex;align-items:center;justify-content:flex-start;gap:10px;width:100%;height:auto;border:0;border-radius:7px;background:transparent;color:var(--ink);font:500 14px/1.2 "CMU Serif",system-ui,sans-serif;padding:8px 10px;text-align:left;cursor:pointer}
 .zoom .sopt:hover{background:var(--rhover)}
@@ -243,7 +243,7 @@ body.hatch .plate-r{fill:url(#hatchN)}
 .seg button[aria-pressed="true"]{background:var(--ink);color:var(--panel)}
 .seg button:focus-visible{outline:2px solid var(--link);outline-offset:-2px}
 
-.zoom{position:absolute;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:6px;z-index:2}
+.zoom{position:absolute;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;align-items:flex-end;gap:6px;z-index:2}
 .zoom button{width:40px;height:40px;border:1px solid var(--panel-line);border-radius:9px;background:var(--panel);color:var(--ink);font:500 20px/1 "CMU Serif",sans-serif;cursor:pointer}
 .zoom button.fit{font-size:12px}
 .bld.unborn{opacity:0;visibility:hidden}
@@ -251,16 +251,17 @@ body.hatch .plate-r{fill:url(#hatchN)}
 .bld.fresh .ft,.bld.fresh .fl,.bld.fresh .fr,.bld.fresh .ln{stroke:var(--acc);stroke-width:1.6;animation:freshpulse 2.6s ease-in-out infinite}
 @keyframes freshpulse{50%{stroke-opacity:.35}}
 @media (prefers-reduced-motion:reduce){.bld.fresh .ft,.bld.fresh .fl,.bld.fresh .fr,.bld.fresh .ln{animation:none}}
-.notice{position:absolute;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:2;display:flex;align-items:center;gap:12px;background:var(--panel);border:1px solid var(--panel-line);border-radius:999px;padding:6px 6px 6px 18px;font:500 14px/1.2 "CMU Sans Serif",system-ui,sans-serif;color:var(--ink);white-space:nowrap;max-width:calc(100% - 32px)}
+.notice{position:absolute;left:50%;bottom:calc(64px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:2;display:flex;align-items:center;gap:12px;background:var(--panel);border:1px solid var(--panel-line);border-radius:999px;padding:6px 6px 6px 18px;font:500 14px/1.2 "CMU Sans Serif",system-ui,sans-serif;color:var(--ink);white-space:nowrap;max-width:calc(100% - 32px)}
 .notice[hidden]{display:none}
 .notice .x{width:28px;height:28px;border:0;border-radius:50%;background:none;color:var(--muted);font-size:18px;line-height:1;cursor:pointer}
 .notice .x:focus-visible{outline:2px solid var(--link)}
-.explore{position:absolute;left:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:2;display:flex;gap:6px}
-.explore button{height:34px;border:1px solid var(--panel-line);border-radius:999px;background:var(--panel);color:var(--ink);font:500 13px/1 "CMU Sans Serif",system-ui,sans-serif;padding:0 13px;cursor:pointer}
-.explore button[aria-pressed="true"]{border-color:var(--acc)}
-.explore button:focus-visible{outline:2px solid var(--link);outline-offset:2px}
-body.replaying .explore,body.replaying .notice{display:none}
-@media (max-width:720px){ .notice{bottom:calc(60px + env(safe-area-inset-bottom,0px))} }
+.zoom .dock{display:flex;align-items:center;justify-content:flex-end;gap:6px}
+.zoom #fogbtn{width:auto;padding:0 14px;border-radius:999px;font:500 13px/1 "CMU Sans Serif",system-ui,sans-serif;white-space:nowrap}
+.zoom #fogbtn[aria-pressed="true"]{border-color:var(--acc)}
+body.replaying #fogbtn,body.replaying .notice{display:none}
+@media (max-width:720px){ .replaydate{bottom:calc(64px + env(safe-area-inset-bottom,0px))}
+  .notice{width:calc(100% - 32px);white-space:normal;flex-wrap:wrap;gap:2px 12px;border-radius:18px;padding:8px 8px 8px 16px}
+  .notice #noticetext{flex:1 0 100%} .notice #noticewatch{margin-right:auto} }
 .panel .watch{margin:0 0 4px}
 .panel li button .new{margin-left:auto;padding-left:8px;font:600 11px "CMU Sans Serif",system-ui,sans-serif;letter-spacing:.06em;text-transform:uppercase;color:var(--acc)}
 .panel li button .when{margin-left:auto;padding-left:8px;font:12.5px "CMU Sans Serif",system-ui,sans-serif;color:var(--muted);white-space:nowrap}
@@ -361,14 +362,17 @@ body.replaying .explore,body.replaying .notice{display:none}
     <button type="button" id="zfit" aria-label="Show the whole city" title="Show the whole city"><svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true"><path d="M4 9V5a1 1 0 0 1 1-1h4M15 4h4a1 1 0 0 1 1 1v4M20 15v4a1 1 0 0 1-1 1h-4M9 20H5a1 1 0 0 1-1-1v-4"/></svg></button>
     <button type="button" id="zout" aria-label="Zoom out" title="Zoom out">−</button>
   </div>
+  <div class="dock">
+    <button type="button" id="fogbtn" aria-pressed="false" title="Dim the buildings you have not opened yet"></button>
   <button type="button" id="recentbtn" aria-label="Recently added" title="Recently added"><svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg></button>
   <button type="button" id="replaystop" hidden aria-label="Stop the replay" title="Stop the replay"><svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true"><rect x="6.5" y="6.5" width="11" height="11" rx="1.5"/></svg></button>
   <button type="button" id="replaybtn" aria-label="Replay how the city was built" title="Replay how the city was built"></button>
   <button type="button" id="toolsbtn" aria-expanded="false" aria-controls="tools" aria-label="Show controls" title="Controls"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><circle cx="12" cy="12" r="3.2"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
+  </div>
 </div>
 <div class="replaydate" id="replaydate" hidden aria-live="polite"></div>
 <div class="notice" id="notice" hidden><span id="noticetext"></span><button type="button" class="linkbtn" id="noticewatch">Watch them being built</button><button type="button" class="x" id="noticex" aria-label="Dismiss">×</button></div>
-<div class="explore" id="explore"><button type="button" id="fogbtn" aria-pressed="false" title="Dim the buildings you have not opened yet"></button><button type="button" id="fogreset" aria-label="Forget what I have explored" title="Forget what I have explored">↺</button></div>
+
 <script>
 // build the city after the first paint so the title and background show immediately
 requestAnimationFrame(()=>setTimeout(()=>{
@@ -1351,7 +1355,6 @@ function refreshMemoryUI(){
   if(n) $("noticetext").textContent=`${n} new text${n>1?"s":""} since your last visit`;
 }
 $("fogbtn").onclick=()=>{ mem.fog=!mem.fog; saveMem(); refreshMemoryUI(); };
-$("fogreset").onclick=()=>{ if(confirm("Forget which buildings you have explored on this device?")){ mem.opened={}; saveMem(); refreshMemoryUI(); } };
 $("noticex").onclick=()=>{ mem.ack=Date.now(); saveMem(); refreshMemoryUI(); };
 $("noticewatch").onclick=()=>{ const only=freshTexts(); mem.ack=Date.now(); saveMem(); refreshMemoryUI(); replayPlay(only); };
 
@@ -1363,9 +1366,8 @@ function recentGroups(){ // day (UTC) -> text ids, newest day first; the origina
 function openRecent(){
   clearSel(); clearLens(); returnTo=null; setFocus(null);
   const first=t=>DATA.buildings.find(b=>b.s===t), au=t=>DATA.rows.find(r=>r.s===t&&r.k!=="comment")||DATA.rows.find(r=>r.s===t);
-  const days=[...recentGroups()].slice(0,14), orig=Object.keys(DATA.S).filter(t=>!DATA.S[t].a).length;
-  openPanel(`<div class="ptag"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg>Recently added</div><h2>What's new</h2>
-    <p class="sub" style="margin:0 0 4px">Texts added to the city, newest first.${orig?` The original ${orig} texts were built before this log.`:""}</p>
+  const days=[...recentGroups()].slice(0,14);
+  openPanel(`<h2>What's new</h2>
     ${days.length?days.map(([d,ts])=>`<h3>${esc(fmtDate(d))} · ${ts.length} text${ts.length>1?"s":""}</h3><button type="button" class="linkbtn watch" data-watch="${d}">Watch them being built</button>
       <ul>${ts.map(t=>`<li><button type="button" data-goto="${first(t).i}"><span class="dot"></span><span>${esc(DATA.S[t].t)}<small>${esc(short(au(t).a))} · ${esc(fmtDate(DATA.S[t].d))}</small></span>${DATA.buildings.some(b=>b.s===t&&isFresh(b))?`<span class="new">new</span>`:""}</button></li>`).join("")}</ul>`).join(""):`<p class="sub">Nothing has been added since the log started.</p>`}`);
   syncHash();

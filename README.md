@@ -33,7 +33,7 @@ The author id is the lower-case name without accents or punctuation (`david-bess
 The page remembers, **in your browser only** (local storage, nothing is sent anywhere):
 
 - **What is new.** Every text records when it was added to the city (`added`, set by `build.py`; the original 30 texts predate the log). A returning visitor sees a note such as "5 new texts since your last visit", the new buildings pulse in the accent colour, and "Watch them being built" replays just those texts on top of the city. Opening a new building, or dismissing the note, clears the glow.
-- **What you have explored.** The chip at the bottom left counts the buildings you have opened. Click it to dim the others, so the map shows your footprint; the ↺ button forgets it. Each district panel says how many of its buildings you have opened.
+- **What you have explored.** The first chip in the row of controls at the bottom right counts the buildings you have opened. Click it to dim the others, so the map shows your footprint, and click it again to bring everything back. Each district panel says how many of its buildings you have opened. (To forget it all, clear this site's data in your browser.)
 - **Recently added.** The clock button lists the latest texts grouped by day, each day with its own "Watch them being built".
 
 A first-time visitor sees none of it: nothing is "new" before you have visited once.
