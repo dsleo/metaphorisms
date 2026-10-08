@@ -1,0 +1,17 @@
+{
+  "id": "aaronsonReaders",
+  "title": "The Mathocalypse",
+  "url": "https://scottaaronson.blog/?p=10169",
+  "date": "2026-10-07",
+  "author": "Readers on Aaronson's post",
+  "kind": "comment",
+  "duplicate_ok": true,
+  "metaphors": [
+    {
+      "district": "cosmos",
+      "title": "AI as a telescope on Platonic worlds",
+      "paraphrase": "A reader argues mathematics is turning empirical: mathematicians become scientists wielding AI as a telescope pointed at new and disturbing alien worlds in the Platonic realm.",
+      "style_hint": "An observatory dome aimed at an unknown planet."
+    }
+  ]
+}

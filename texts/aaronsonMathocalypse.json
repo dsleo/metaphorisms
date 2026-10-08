@@ -1,0 +1,52 @@
+{
+  "id": "aaronsonMathocalypse",
+  "title": "The Mathocalypse",
+  "url": "https://scottaaronson.blog/?p=10169",
+  "date": "2026-10-07",
+  "author": "Scott Aaronson",
+  "kind": "essay",
+  "metaphors": [
+    {
+      "district": "grief",
+      "title": "The Mathocalypse",
+      "paraphrase": "Names the sudden wave of AI-solved problems a Mathocalypse, an apocalypse for the field, with a friend's joke about the machines coming for one problem after another.",
+      "style_hint": "Ruined skyline under a red sky."
+    },
+    {
+      "district": "economy",
+      "title": "Aladdin’s cave",
+      "paraphrase": "The flood of new results is a hoard of treasures from Aladdin's cave: dazzling, plentiful, and still to be sorted through and valued.",
+      "style_hint": "A cave mouth spilling coins and gems."
+    },
+    {
+      "district": "cosmos",
+      "title": "Alien proofs",
+      "paraphrase": "A colleague's notes call the new proof some alien craziness, and say there is much to learn from the aliens: the proofs read as made by another civilization.",
+      "style_hint": "A strange spired structure that looks landed from elsewhere."
+    },
+    {
+      "district": "terrain",
+      "title": "Resort next to the rainforest",
+      "paraphrase": "Mathematicians are like a hunter-gatherer expert in surviving the rainforest, when a giant resort hotel with heated pools opens beside him; he adapts by guiding tourists through the wilderness.",
+      "style_hint": "A hut at the edge of a forest beside a glass hotel."
+    },
+    {
+      "district": "terrain",
+      "title": "Teleported to a mountain peak",
+      "paraphrase": "Quoting Quanta's image: AI drops you on a mountain peak in fog with no map and no equipment, without the climb that would have taught you the terrain.",
+      "style_hint": "A summit in fog with a tiny figure on top."
+    },
+    {
+      "district": "body",
+      "title": "Undigested proofs",
+      "paraphrase": "One way of releasing AI results posts the undigested solutions and starts a race among humans to digest and explain a messy proof; the other has the finders write a digested version first.",
+      "style_hint": "A great pipe feeding an organ-like chamber."
+    },
+    {
+      "district": "speed",
+      "title": "The accelerating AImobile",
+      "paraphrase": "In a reply, he warns of losing human hands at the wheel of this accelerating AImobile just when more are needed.",
+      "style_hint": "A car with no driver speeding down a track."
+    }
+  ]
+}
