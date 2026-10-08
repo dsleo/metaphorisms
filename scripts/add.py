@@ -81,7 +81,7 @@ Read the text below and list its distinct metaphors/analogies/images (not plain 
 - title: 2-5 words naming the image.
 - paraphrase: one or two sentences in your own words (never quote), saying what the image says about AI/mathematics.
 - style_hint: one sentence describing the building to draw for this image (concrete shapes and objects).
-Also give: id (camelCase, author's surname plus a short word if needed), title, author (display name; "Readers on X's post" for comment threads), kind ("essay" or "comment"), date (YYYY-MM-DD, use the hint if given).
+Also give: id (camelCase, author's surname plus a short word if needed), title, author (display name; "Readers on X's post" for comment threads), kind ("essay", "comment" for reader comments, or "tweet"), date (YYYY-MM-DD, use the hint if given).
 Be selective: only real, vivid metaphors, between 1 and 8. Existing metaphors in the city, for calibration:
 {dist}
 
@@ -94,7 +94,7 @@ TEXT:
 SCHEMA = {"type": "object", "additionalProperties": False,
           "required": ["id", "title", "author", "kind", "date", "metaphors"],
           "properties": {"id": {"type": "string"}, "title": {"type": "string"}, "author": {"type": "string"},
-                         "kind": {"type": "string", "enum": ["essay", "comment"]}, "date": {"type": "string"},
+                         "kind": {"type": "string", "enum": ["essay", "comment", "tweet"]}, "date": {"type": "string"},
                          "metaphors": {"type": "array", "items": {"type": "object", "additionalProperties": False,
                              "required": ["district", "district_reason", "new_district", "title", "paraphrase", "style_hint"],
                              "properties": {k: {"type": "string"} for k in ("district", "district_reason", "new_district", "title", "paraphrase", "style_hint")}}}}}
@@ -123,6 +123,8 @@ def write_draft(resp, url, page, districts, force=False):
         if d["district"] == "NEW":
             d["new_district"] = m["new_district"]
         ms.append(d)
+    if urllib.parse.urlparse(url).netloc.removeprefix("www.") in ("x.com", "twitter.com"):
+        resp["kind"] = "tweet"
     t = {"id": tid, "title": resp["title"], "url": url, "date": page["date"] or resp["date"],
          "author": resp["author"], "kind": resp["kind"], "metaphors": ms}
     if force:

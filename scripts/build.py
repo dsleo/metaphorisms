@@ -14,8 +14,8 @@ from pathlib import Path
 from urllib.parse import urlparse
 
 ROOT = Path(__file__).resolve().parent.parent
-HTML, README, TEXTS = ROOT / "index.html", ROOT / "README.md", ROOT / "texts"
-KINDS = ("essay", "comment")
+HTML, README, TEXTS, DISTRICTS = ROOT / "index.html", ROOT / "README.md", ROOT / "texts", ROOT / "districts"
+KINDS = ("essay", "comment", "tweet")
 MAX_PER_BLOCK = 3  # keep at least one tree per block so the map can breathe
 TREE_FLOOR = 0.4   # and at least this share of all cells stays tree/park; below it the map grows instead
 FIRST_RING = 6  # blocks with max(i,j) >= 6 are the expansion area; the original 6x6 city is frozen
@@ -71,6 +71,32 @@ def find_duplicate(title, url, known):
             return tid
 
 
+# ---------- new districts ----------
+def load_districts():
+    """districts/<id>.json {id, name, icon}: districts that can be added to the city. The page also needs a
+    BUILD.<id> drawing function in index.html (hand-made, see README)."""
+    out = {}
+    for p in sorted(DISTRICTS.glob("*.json")):
+        d = json.loads(p.read_text())
+        if d.get("id") != p.stem or not all(isinstance(d.get(k), str) and d[k] for k in ("name", "icon")):
+            die(f"{p.name}: needs 'id' (= file name), 'name' and 'icon' (inner SVG of a 24x24 stroke icon)")
+        out[d["id"]] = d
+    return out
+
+
+def ensure_district(data, avail, c):
+    if c not in {k["id"] for k in data["clusters"]}:
+        data["clusters"].append({"id": c, "name": avail[c]["name"]})
+        data["ICONS"][c] = avail[c]["icon"]
+
+
+def label_new_districts(data):  # a new district's label sits on the middle of its first block
+    for c in data["clusters"]:
+        if c["id"] not in data["labels"]:
+            bk = next(b for b in data["blocks"] if b["c"] == c["id"])
+            data["labels"][c["id"]] = [3 * bk["i"] + 2, 3 * bk["j"] + 2]
+
+
 # ---------- read / validate texts ----------
 def load_texts(districts):
     out = {}
@@ -91,7 +117,7 @@ def load_texts(districts):
         for m in t["metaphors"]:
             if m.get("district") not in districts:
                 die(where + f"unknown district {m.get('district')!r}; existing: {', '.join(districts)}. "
-                    "A new district needs its own building art in index.html first.")
+                    "To add a district: districts/<id>.json plus BUILD.<id> in index.html.")
             if not m.get("title") or not m.get("paraphrase"):
                 die(where + "every metaphor needs 'title' and 'paraphrase'")
             if not isinstance(m.get("style_hint", ""), str):
@@ -136,7 +162,7 @@ def freeze_style_index(data):
 
 
 # ---------- placement ----------
-def add_text(data, t):
+def add_text(data, t, avail):
     data["S"][t["id"]] = {"t": t["title"], "u": t["url"], "d": t["date"]}
     per = collections.OrderedDict()
     for m in t["metaphors"]:
@@ -146,6 +172,7 @@ def add_text(data, t):
         data["rows"].append(row)
         per.setdefault(m["district"], []).append(len(data["rows"]) - 1)
     for c, ms in per.items():
+        ensure_district(data, avail, c)
         w = 2 if len(ms) >= 3 else 1  # 3+ metaphors get a whole block
         x, y = pick_slot(data, c, w)
         b = {"c": c, "s": t["id"], "m": ms, "n": len(ms), "x": x, "y": y, "w": w}
@@ -173,8 +200,10 @@ def pick_slot(data, c, w):
     mine = [bk for bk in blocks if bk["c"] == c and frontier(bk)]
     if mine:  # stay next to what this district already built out here
         gi, gj = (sum(bk[a] for bk in mine) / len(mine) for a in "ij")
-    else:     # otherwise the open block closest to the district's own label
+    elif c in data["labels"]:  # otherwise the open block closest to the district's own label
         gi, gj = (v / 3 for v in data["labels"][c])
+    else:     # a brand-new district starts near the middle of the map
+        gi = gj = data["NB"] / 2
     bk = min((b for b in blocks if b.get("open")), key=lambda b: (math.hypot(b["i"] - gi, b["j"] - gj), b["j"], b["i"]))
     bk["c"] = c
     del bk["open"]
@@ -251,8 +280,9 @@ def assert_extension_only(old, new):
         assert b.get("k", new["buildings"][i].get("k")) == new["buildings"][i].get("k"), f"building {i} restyled"
     for a, b in zip(old["rows"], new["rows"]):
         assert (a["c"], a["s"]) == (b["c"], b["s"]), "metaphor reassigned"
-    for key in ("labels", "clusters", "ICONS"):
-        assert old[key] == new[key], key + " changed"
+    assert new["clusters"][:len(old["clusters"])] == old["clusters"], "districts changed"
+    for key in ("labels", "ICONS"):
+        assert all(new[key].get(k) == v for k, v in old[key].items()), key + " changed"
     assert all(b in new["blocks"] for b in old["blocks"] if not frontier(b)), "original block changed"
     built = {p for b in new["buildings"] for p in footprint(b)}
     assert all(d in new["decor"] or (d["x"], d["y"]) in built for d in old["decor"]
@@ -263,7 +293,8 @@ def main():
     check = "--check" in sys.argv
     html, data, s, e = load_html()
     old = json.loads(json.dumps(data))
-    reconcile(data, texts := load_texts([c["id"] for c in data["clusters"]]))
+    avail = load_districts()
+    reconcile(data, texts := load_texts([c["id"] for c in data["clusters"]] + sorted(avail)))
     freeze_style_index(data)
     known = {i: (v["t"], v["u"]) for i, v in data["S"].items()}
     for t in sorted((t for i, t in texts.items() if i not in data["S"]), key=lambda t: (t["date"], t["id"])):
@@ -272,7 +303,8 @@ def main():
             die(f"{t['id']} looks like a duplicate of {dup} ({known[dup][0]!r}). If it really is a different text, "
                 'add "duplicate_ok": true to its JSON; otherwise delete texts/' + t["id"] + ".json.")
         known[t["id"]] = (t["title"], t["url"])
-        add_text(data, t)
+        add_text(data, t, avail)
+    label_new_districts(data)
     refresh_decor(data)
     refresh_links(data)
     assert_extension_only(old, data)
