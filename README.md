@@ -17,7 +17,15 @@ Each district is a family of images (games and sport, religion, economy, terrain
 
 ## Adding a text
 
-Create `texts/<id>.json` (the id is a short camelCase key, e.g. `littBabel`):
+From a URL, let an LLM draft the file (blog post, arXiv page or tweet; needs an OpenAI key):
+
+```bash
+OPENAI_API_KEY=sk-... python3 scripts/add.py https://example.com/post
+```
+
+It writes `texts/<id>.json` and stops, so you can review the metaphors first. If a metaphor fits none of the existing districts, the draft goes to `texts/_pending/` instead (ignored by the build): a new district needs building art, which is done by hand in a Claude Code session.
+
+Or create `texts/<id>.json` (the id is a short camelCase key, e.g. `littBabel`):
 
 ```json
 {
@@ -28,7 +36,8 @@ Create `texts/<id>.json` (the id is a short camelCase key, e.g. `littBabel`):
   "author": "Daniel Litt",
   "kind": "essay",
   "metaphors": [
-    {"district": "terrain", "title": "Library of Babel", "paraphrase": "A short paraphrase, not a quotation."}
+    {"district": "terrain", "title": "Library of Babel", "paraphrase": "A short paraphrase, not a quotation.",
+     "style_hint": "optional: what the building should look like"}
   ]
 }
 ```
@@ -36,7 +45,7 @@ Create `texts/<id>.json` (the id is a short camelCase key, e.g. `littBabel`):
 - `kind` is `essay` or `comment`; `district` is one of the 12 existing district ids (see `DATA.clusters`).
 - Then run `python3 scripts/build.py`. It places the new buildings, recomputes the links between districts and regenerates the table below. `--check` only reports whether everything is up to date.
 
-The city only ever grows. The original 6×6 blocks are frozen: new texts are built in a new L-shaped ring of unexplored blocks along the right/bottom edges (each district claims the free blocks nearest to it, and the plate grows by one ring when the frontier is full). A text with 3 or more metaphors in one district gets a whole block, fewer get a single plot. The script refuses any change that would move or restyle an existing building, and editing the wording of an existing text is fine as long as it keeps the same number of metaphors per district.
+The city only ever grows. The original 6×6 blocks are frozen: new texts are built in a new L-shaped ring of unexplored blocks along the right/bottom edges (each block keeps at least one tree so the map can breathe, each district claims the free blocks nearest to it, and the plate grows by one ring when the frontier is full). A text with 3 or more metaphors in one district gets a whole block, fewer get a single plot. The script refuses any change that would move or restyle an existing building, and editing the wording of an existing text is fine as long as it keeps the same number of metaphors per district.
 
 ## Notes
 

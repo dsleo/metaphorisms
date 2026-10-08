@@ -16,6 +16,7 @@ from urllib.parse import urlparse
 ROOT = Path(__file__).resolve().parent.parent
 HTML, README, TEXTS = ROOT / "index.html", ROOT / "README.md", ROOT / "texts"
 KINDS = ("essay", "comment")
+MAX_PER_BLOCK = 3  # keep at least one tree per block so the map can breathe
 FIRST_RING = 6  # blocks with max(i,j) >= 6 are the expansion area; the original 6x6 city is frozen
 
 
@@ -70,6 +71,8 @@ def load_texts(districts):
                     "A new district needs its own building art in index.html first.")
             if not m.get("title") or not m.get("paraphrase"):
                 die(where + "every metaphor needs 'title' and 'paraphrase'")
+            if not isinstance(m.get("style_hint", ""), str):
+                die(where + "'style_hint' must be a string (what the building should look like)")
         out[p.stem] = t
     return out
 
@@ -95,6 +98,8 @@ def reconcile(data, texts):
         for c, ms in want.items():
             for k, m in zip(built[c], ms):
                 data["rows"][k].update(t=m["title"], d=m["paraphrase"], a=t["author"], k=t["kind"])
+                if m.get("style_hint"):
+                    data["rows"][k]["h"] = m["style_hint"]
 
 
 def freeze_style_index(data):
@@ -112,8 +117,10 @@ def add_text(data, t):
     data["S"][t["id"]] = {"t": t["title"], "u": t["url"], "d": t["date"]}
     per = collections.OrderedDict()
     for m in t["metaphors"]:
-        data["rows"].append({"c": m["district"], "t": m["title"], "d": m["paraphrase"],
-                             "a": t["author"], "s": t["id"], "k": t["kind"]})
+        row = {"c": m["district"], "t": m["title"], "d": m["paraphrase"], "a": t["author"], "s": t["id"], "k": t["kind"]}
+        if m.get("style_hint"):
+            row["h"] = m["style_hint"]  # not rendered yet; guides custom building art
+        data["rows"].append(row)
         per.setdefault(m["district"], []).append(len(data["rows"]) - 1)
     for c, ms in per.items():
         w = 2 if len(ms) >= 3 else 1  # 3+ metaphors get a whole block
@@ -131,7 +138,7 @@ def pick_slot(data, c, w):
         for bk in blocks:
             if bk["c"] == c and frontier(bk):
                 free = [p for p in cells(bk) if p not in used]
-                if free:
+                if len(free) > 4 - MAX_PER_BLOCK:
                     return free[0]
     while not any(bk.get("open") for bk in blocks):
         grow(data)
