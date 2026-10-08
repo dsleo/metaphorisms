@@ -246,6 +246,18 @@ body.hatch .plate-r{fill:url(#hatchN)}
 .zoom button{width:40px;height:40px;border:1px solid var(--panel-line);border-radius:9px;background:var(--panel);color:var(--ink);font:500 20px/1 "CMU Serif",sans-serif;cursor:pointer}
 .zoom button.fit{font-size:12px}
 .bld.unborn{opacity:0;visibility:hidden}
+.bld.adim,.deco.adim{opacity:.15}
+.panel li button .when{margin-left:auto;padding-left:8px;font:12.5px "CMU Sans Serif",system-ui,sans-serif;color:var(--muted);white-space:nowrap}
+.panel li button small{display:block;font:12.5px "CMU Sans Serif",system-ui,sans-serif;color:var(--muted)}
+.fp{display:flex;flex-direction:column;gap:5px}
+.fprow{display:grid;grid-template-columns:18px minmax(0,1.2fr) minmax(0,1fr) 16px;align-items:center;gap:8px;font:13px "CMU Sans Serif",system-ui,sans-serif;color:var(--ink)}
+.fpi svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;display:block}
+.fpn{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fpb{height:6px;border-radius:3px;background:var(--panel-line);overflow:hidden}
+.fpb i{display:block;height:100%;background:var(--acc)}
+.fpc{color:var(--muted);text-align:right}
+.sauthors{display:flex;flex-wrap:wrap;gap:4px 10px;margin:6px 2px 0;font-size:13px}
+.sauthors:empty{display:none}
 .bld.born .ft,.bld.born .fl,.bld.born .fr,.bld.born .ln{stroke:var(--acc);stroke-width:1.8}
 .replaydate{position:absolute;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:2;pointer-events:none;background:var(--panel);border:1px solid var(--panel-line);border-radius:999px;padding:7px 18px;font:500 15px/1.2 "CMU Sans Serif",system-ui,sans-serif;color:var(--ink);white-space:nowrap}
 .replaydate[hidden]{display:none}
@@ -323,6 +335,7 @@ body.hatch .plate-r{fill:url(#hatchN)}
   <div class="searchpop" id="searchpop" hidden>
     <input id="q" type="search" placeholder="Search metaphors, authors, texts…" autocomplete="off" aria-label="Search the city">
     <div class="status" id="status" aria-live="polite"></div>
+    <div class="sauthors" id="sauthors"></div>
   </div>
   <div class="stylemenu" id="stylemenu" hidden role="menu" aria-label="Drawing style"></div>
   <div class="tools" id="tools" hidden>
@@ -353,6 +366,25 @@ const short=a=>/^Readers? on/.test(a)?"reader comment":a;
 DATA.buildings.forEach((b,i)=>{ b.i=i; b.src=DATA.S[b.s]; b.imgs=b.m.map(k=>DATA.rows[k]); });
 DATA.clusters.forEach(c=>{ const bs=DATA.buildings.filter(b=>b.c===c.id&&b.w===1&&b.k===undefined); bs.sort((a,b)=>(a.x+a.y)-(b.x+b.y)||a.x-b.x).forEach((b,k)=>b.k=k); }); // b.k is stored by scripts/build.py; this only covers legacy data
 DATA.buildings.forEach(b=>{ if(b.k===undefined) b.k=0; });
+
+/* ================= AUTHORS: people only (not reader comments or anonymous); co-authors are split ================= */
+const NAMES=/\s+and\s+|,\s*/;
+const slug=n=>n.normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/\(.*?\)/g,"").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
+const isPerson=r=>r.k!=="comment"&&!/^(Readers? on |Anonymous)/i.test(r.a);
+const AU=new Map();  // author id -> {id, name, texts:Set, rows:[metaphor index], c:{district:count}}
+const rowBld={};     // metaphor index -> its building
+DATA.buildings.forEach(b=>b.m.forEach(k=>rowBld[k]=b));
+DATA.rows.forEach((r,k)=>{ if(!isPerson(r)) return;
+  r.a.split(NAMES).forEach(n=>{ const id=slug(n); if(!id) return;
+    if(!AU.has(id)) AU.set(id,{id,name:n.trim(),texts:new Set(),rows:[],c:{}});
+    const a=AU.get(id); a.texts.add(r.s); a.rows.push(k); a.c[r.c]=(a.c[r.c]||0)+1; }); });
+const authorHtml=r=>isPerson(r)?r.a.split(NAMES).map(n=>`<button type="button" class="linkbtn" data-author="${slug(n)}">${esc(n.trim())}</button>`).join(" and "):esc(short(r.a));
+function similarAuthors(a){ // closest authors: cosine similarity of their per-district metaphor counts
+  const ids=DATA.clusters.map(c=>c.id), vec=o=>ids.map(d=>o.c[d]||0), va=vec(a), na=Math.hypot(...va);
+  return [...AU.values()].filter(o=>o!==a).map(o=>{ const vo=vec(o);
+    return {o,sim:va.reduce((t,x,i)=>t+x*vo[i],0)/(na*Math.hypot(...vo)),shared:ids.filter((d,i)=>va[i]&&vo[i])}; })
+    .filter(x=>x.shared.length).sort((p,q)=>q.sim-p.sim||q.shared.length-p.shared.length||p.o.name.localeCompare(q.o.name)).slice(0,5);
+}
 
 /* ================= ISOMETRIC PRIMITIVES ================= */
 const TW=64, TH=32, OX=720, OY=250;
@@ -1004,7 +1036,7 @@ const svg=$("map"), world=$("world"), N=3*DATA.NB+1;
   // flying vehicles live in a top layer but behave as part of their building
   $("air").innerHTML=DATA.buildings.filter(b=>b.airSvg).sort((a,b)=>a.y+a.x-(b.y+b.x)).map(b=>`<g class="bld airborne" data-b="${b.i}" data-d="${b.c}" tabindex="-1">${b.airSvg}</g>`).join("");
   DATA.buildings.forEach(b=>{ if(!b.airSvg) return; b.air=document.querySelector(`#air .bld[data-b="${b.i}"]`);
-    const sync=()=>["sel","kin","dim","out","unborn","born"].forEach(c=>b.air.classList.toggle(c,b.el.classList.contains(c)));
+    const sync=()=>["sel","kin","dim","adim","out","unborn","born"].forEach(c=>b.air.classList.toggle(c,b.el.classList.contains(c)));
     new MutationObserver(sync).observe(b.el,{attributes:true,attributeFilter:["class"]}); });
 })();
 const DL=[];
@@ -1082,7 +1114,7 @@ $("zfit").onclick=()=>overview();
 
 
 /* ================= DISTRICTS, BUILDINGS, TEXTS ================= */
-let focus=null, sel=null, KHOME=1;
+let focus=null, sel=null, KHOME=1, lens=null, returnTo=null; // lens: author id being shown; returnTo: author panel to come back to from a building
 const isMobile=()=>svg.clientWidth<=720;
 function districtBox(id){ const bs=DATA.blocks.filter(b=>b.c===id); let xs=[],ys=[];
   bs.forEach(b=>{ const x=3*b.i+1,y=3*b.j+1; [[x,y],[x+2,y],[x+2,y+2],[x,y+2]].forEach(([a,c])=>{ const p=P(a,c,0); xs.push(p[0]); ys.push(p[1]); ys.push(p[1]-80); }); });
@@ -1098,17 +1130,44 @@ function setFocus(id){
 function clearSel(){ if(sel!==null) DATA.buildings[sel].el.classList.remove("sel"); sel=null; kin(null); }
 function closePanel(){ $("panel").classList.remove("open"); }
 function openPanel(html){ const p=$("panel"); p.innerHTML=`<button class="close" type="button" aria-label="Close">×</button>`+html; p.classList.add("open"); p.querySelector(".close").onclick=back; p.scrollTop=0; }
-function overview(){ clearSel(); setFocus(null); closePanel(); flyTo(homeBox()); syncHash(); }
-function back(){ if(sel!==null&&focus){ clearSel(); openDistrict(focus,{fly:false}); } else overview(); }
+function overview(){ clearSel(); clearLens(); returnTo=null; setFocus(null); closePanel(); flyTo(homeBox()); syncHash(); }
+function back(){ if(sel!==null&&returnTo){ const a=returnTo; clearSel(); openAuthor(a); } else if(sel!==null&&focus){ clearSel(); openDistrict(focus,{fly:false}); } else overview(); }
 function center(b){ const c=P(b.x+b.w/2,b.y+b.w/2,18); return c; }
+const beam=(c0,c1)=>`<path class="kinbeam" d="M${pt(c0)}Q${f1((c0[0]+c1[0])/2)},${f1(Math.min(c0[1],c1[1])-60)} ${pt(c1)}"/>`;
 function kin(b){
   DATA.buildings.forEach(o=>o.el.classList.toggle("kin",!!b&&o.s===b.s&&o!==b));
   if(!b){ $("beams").innerHTML=""; return; }
   const same=DATA.buildings.filter(o=>o.s===b.s&&o!==b), c0=center(b);
-  $("beams").innerHTML=same.map(o=>{ const c1=center(o), mx=(c0[0]+c1[0])/2, my=Math.min(c0[1],c1[1])-60; return `<path class="kinbeam" d="M${pt(c0)}Q${f1(mx)},${f1(my)} ${pt(c1)}"/>`; }).join("");
+  $("beams").innerHTML=same.map(o=>beam(c0,center(o))).join("");
+}
+function clearLens(){
+  if(!lens) return; lens=null;
+  DATA.buildings.forEach(b=>b.el.classList.remove("adim","kin")); document.querySelectorAll(".deco").forEach(d=>d.classList.remove("adim")); $("beams").innerHTML="";
+}
+function openAuthor(id,{fly=true}={}){
+  const a=AU.get(id); if(!a) return;
+  clearSel(); clearLens(); setFocus(null); returnTo=null; lens=id;
+  const mine=new Set(a.rows.map(k=>rowBld[k])), bs=[...mine];
+  DATA.buildings.forEach(b=>{ b.el.classList.toggle("adim",!mine.has(b)); b.el.classList.toggle("kin",mine.has(b)); });
+  document.querySelectorAll(".deco").forEach(d=>d.classList.add("adim"));
+  let beams=""; // chain the buildings of each text together
+  a.texts.forEach(t=>{ const g=bs.filter(b=>b.s===t).sort((x,y)=>x.i-y.i); for(let i=1;i<g.length;i++) beams+=beam(center(g[i-1]),center(g[i])); });
+  $("beams").innerHTML=beams;
+  const kindOf=t=>DATA.rows.find(r=>r.s===t).k, first=t=>bs.filter(b=>b.s===t).sort((x,y)=>x.i-y.i)[0];
+  const texts=[...a.texts].sort((x,y)=>DATA.S[x].d.localeCompare(DATA.S[y].d)||x.localeCompare(y));
+  const rows=[...a.rows].sort((x,y)=>DATA.S[DATA.rows[x].s].d.localeCompare(DATA.S[DATA.rows[y].s].d)||x-y);
+  const ds=Object.keys(a.c).sort((x,y)=>a.c[y]-a.c[x]||CN[x].localeCompare(CN[y])), max=a.c[ds[0]], sim=similarAuthors(a);
+  openPanel(`<div class="ptag"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-4 3-6 7-6s7 2 7 6"/></svg>Author</div><h2>${esc(a.name)}</h2>
+    <p class="sub" style="margin:0 0 4px">${texts.length} text${texts.length>1?"s":""}, ${rows.length} metaphor${rows.length>1?"s":""}, in ${ds.length} district${ds.length>1?"s":""}.</p>
+    <h3>Texts</h3><ul>${texts.map(t=>`<li><button type="button" data-goto="${first(t).i}"><span class="dot"></span><span>${esc(DATA.S[t].t)}${kindOf(t)==="essay"?"":`<small>${kindOf(t)}</small>`}</span><span class="when">${esc(fmtDate(DATA.S[t].d))}</span></button></li>`).join("")}</ul>
+    <h3>Metaphors</h3><ul>${rows.map(k=>`<li><button type="button" data-goto="${rowBld[k].i}"><span class="dot"></span><span>${esc(DATA.rows[k].t)}<small>${esc(CN[DATA.rows[k].c])}</small></span></button></li>`).join("")}</ul>
+    <h3>Fingerprint</h3><div class="fp">${ds.map(d=>`<div class="fprow"><span class="fpi">${icon(d,15)}</span><span class="fpn">${esc(CN[d])}</span><span class="fpb"><i style="width:${Math.round(100*a.c[d]/max)}%"></i></span><span class="fpc">${a.c[d]}</span></div>`).join("")}</div>
+    ${sim.length?`<h3>Draws on the same images as</h3><ul>${sim.map(x=>`<li><button type="button" data-author="${x.o.id}"><span class="dot"></span><span>${esc(x.o.name)}<small>${x.shared.map(d=>esc(CN[d])).join(", ")}</small></span></button></li>`).join("")}</ul>`:""}`);
+  if(fly){ const cs=bs.map(center), xs=cs.map(c=>c[0]), ys=cs.map(c=>c[1]); flyTo(fitBox(Math.min(...xs)-60,Math.min(...ys)-70,Math.max(...xs)+60,Math.max(...ys)+40,isMobile()?12:40)); }
+  syncHash();
 }
 function openDistrict(id,{fly=true}={}){
-  clearSel(); setFocus(id);
+  clearSel(); clearLens(); returnTo=null; setFocus(id);
   const bs=DATA.buildings.filter(b=>b.c===id).sort((a,b)=>b.n-a.n), imgs=bs.reduce((s,b)=>s+b.n,0);
   const nb=DATA.links.filter(l=>l.a===id||l.b===id).map(l=>({id:l.a===id?l.b:l.a,j:l.j,n:l.texts})).sort((a,b)=>b.j-a.j), maxj=nb.length?nb[0].j:1;
   openPanel(`<div class="ptag">${icon(id,18)}District</div><h2>${esc(CN[id])}</h2>
@@ -1119,14 +1178,15 @@ function openDistrict(id,{fly=true}={}){
   syncHash();
 }
 function openBuilding(i){
+  if(lens){ returnTo=lens; clearLens(); } // opened from an author: closing the building comes back to that author
   const b=DATA.buildings[i]; if(focus!==b.c) setFocus(b.c);
   clearSel(); sel=i; b.el.classList.add("sel"); kin(b);
   const others=DATA.buildings.filter(o=>o.s===b.s&&o!==b);
-  const authors=[...new Set(b.imgs.map(r=>r.a))];
+  const who=[...new Map(b.imgs.map(r=>[r.a,r])).values()].map(authorHtml).join(", ");
   openPanel(`<button type="button" class="linkbtn backlink" id="toD">‹ ${esc(CN[b.c])}</button>
     <h2 class="ttl"><span>${esc(b.src.t)}</span><a class="ext" href="${esc(b.src.u)}" target="_blank" rel="noopener" aria-label="Open the original text" title="Open the original text"><svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></a></h2>
     <div class="meta" style="border-top:0;padding-top:0">
-      <div class="who">${authors.map(a=>esc(short(a))).join(", ")}</div>
+      <div class="who">${who}</div>
       <div class="sub">${fmtDate(b.src.d)}</div>
     </div>
     <div class="imgs">${b.imgs.map(r=>`<h4>${esc(r.t)}</h4><p>${esc(r.d)}</p>${r.k==="comment"?`<div class="tag">From the comments, by ${esc(r.a.replace(/^Readers? on /,"a reader on "))}</div>`:r.k==="tweet"?`<div class="tag">A tweet by ${esc(r.a)}</div>`:""}`).join("")}</div>
@@ -1138,7 +1198,7 @@ function openBuilding(i){
 }
 const tip=$("tip");
 svg.addEventListener("pointerover",e=>{ const g=e.target.closest(".bld"); if(!g||pts.size) return; const b=DATA.buildings[+g.dataset.b];
-  tip.innerHTML=`<b>${esc(b.src.t)}</b><span>${esc(short(b.imgs[0].a))} · ${esc(CN[b.c])}</span>`; tip.style.display="block"; if(sel===null) kin(b); });
+  tip.innerHTML=`<b>${esc(b.src.t)}</b><span>${esc(short(b.imgs[0].a))} · ${esc(CN[b.c])}</span>`; tip.style.display="block"; if(sel===null&&!lens) kin(b); });
 svg.addEventListener("pointermove",e=>{ if(tip.style.display!=="block") return;
   const tw=tip.offsetWidth, th=tip.offsetHeight, tag=document.querySelector(".dtag.show");
   const cands=[[e.clientX+14,e.clientY+16],[e.clientX-14-tw,e.clientY+16],[e.clientX+14,e.clientY-16-th],[e.clientX-14-tw,e.clientY-16-th]];
@@ -1146,7 +1206,7 @@ svg.addEventListener("pointermove",e=>{ if(tip.style.display!=="block") return;
   if(tag){ const r=tag.getBoundingClientRect(); const hit=([x,y])=>x<r.right+4&&x+tw>r.left-4&&y<r.bottom+4&&y+th>r.top-4;
     pick=cands.find(c=>!hit(c)&&c[0]>4&&c[0]+tw<innerWidth-4&&c[1]>4)||cands[0]; }
   tip.style.left=Math.max(4,Math.min(pick[0],innerWidth-tw-4))+"px"; tip.style.top=Math.max(4,pick[1])+"px"; });
-svg.addEventListener("pointerout",e=>{ const g=e.target.closest(".bld"); if(!g) return; if(e.relatedTarget&&g.contains(e.relatedTarget)) return; tip.style.display="none"; if(sel===null) kin(null); else kin(DATA.buildings[sel]); });
+svg.addEventListener("pointerout",e=>{ const g=e.target.closest(".bld"); if(!g) return; if(e.relatedTarget&&g.contains(e.relatedTarget)) return; tip.style.display="none"; if(lens) return; if(sel===null) kin(null); else kin(DATA.buildings[sel]); });
 svg.addEventListener("click",e=>{
   if(moved>4) return; tip.style.display="none";
   const g=e.target.closest(".bld"); if(g){ openBuilding(+g.dataset.b); return; }
@@ -1154,7 +1214,7 @@ svg.addEventListener("click",e=>{
   if(focus) overview();
 });
 svg.addEventListener("keydown",e=>{ if(e.key!=="Enter"&&e.key!==" ") return; const g=e.target.closest&&e.target.closest(".bld"); if(g){ e.preventDefault(); openBuilding(+g.dataset.b); } });
-$("panel").addEventListener("click",e=>{ const b=e.target.closest("[data-goto]"); if(b){ openBuilding(+b.dataset.goto); return; } const d=e.target.closest("[data-district]"); if(d) openDistrict(d.dataset.district); });
+$("panel").addEventListener("click",e=>{ const au=e.target.closest("[data-author]"); if(au){ openAuthor(au.dataset.author); return; } const b=e.target.closest("[data-goto]"); if(b){ openBuilding(+b.dataset.goto); return; } const d=e.target.closest("[data-district]"); if(d) openDistrict(d.dataset.district); });
 $("panel").addEventListener("mouseover",e=>{ const d=e.target.closest("[data-district]"); if(d){ document.querySelectorAll(`[data-d="${d.dataset.district}"]`).forEach(el=>el.classList.remove("out")); hoverD=d.dataset.district; showTags(); } });
 $("panel").addEventListener("mouseout",e=>{ const d=e.target.closest("[data-district]"); if(d){ hoverD=null; if(focus) setFocus(focus); else showTags(); } });
 document.addEventListener("keydown",e=>{ if(e.key==="Escape") back(); });
@@ -1173,12 +1233,16 @@ function search(){
   document.querySelectorAll(".deco").forEach(d=>d.classList.toggle("dim",!!q));
   const ni=hits.reduce((s,b)=>s+b.n,0);
   $("status").textContent=q?(hits.length?`${hits.length} matching building${hits.length>1?"s":""}. Enter to frame them.`:"Nothing matches. Try a shorter word."):"";
-  if(q&&focus){ clearSel(); setFocus(null); closePanel(); }
+  if(q&&(focus||lens)){ clearSel(); clearLens(); setFocus(null); closePanel(); }
+  $("sauthors").innerHTML=q.length>1?[...AU.values()].filter(a=>a.name.toLowerCase().includes(q)).slice(0,4).map(a=>`<button type="button" class="linkbtn" data-author="${a.id}">${esc(a.name)}</button>`).join(""):"";
   syncHash(true);
   return hits;
 }
 $("q").addEventListener("input",search);
-$("q").addEventListener("keydown",e=>{ if(e.key!=="Enter") return; const h=search(); if(!h.length) return; if(h.length===1){ openBuilding(h[0].i); return; }
+$("sauthors").addEventListener("click",e=>{ const b=e.target.closest("[data-author]"); if(!b) return; $("q").value=""; search(); searchPop(false); openAuthor(b.dataset.author); });
+$("q").addEventListener("keydown",e=>{ if(e.key!=="Enter") return;
+  const who=[...AU.values()].find(a=>a.name.toLowerCase()===$("q").value.trim().toLowerCase()); if(who){ $("q").value=""; search(); searchPop(false); openAuthor(who.id); return; }
+  const h=search(); if(!h.length) return; if(h.length===1){ openBuilding(h[0].i); return; }
   const cs=h.map(center), xs=cs.map(c=>c[0]), ys=cs.map(c=>c[1]); flyTo(fitBox(Math.min(...xs)-60,Math.min(...ys)-70,Math.max(...xs)+60,Math.max(...ys)+40)); });
 
 /* ================= STYLE SWITCH ================= */
@@ -1218,11 +1282,11 @@ function setStyle(id){
 }
 document.querySelectorAll(".sopt").forEach(b=>b.onclick=()=>{ setStyle(b.dataset.style); styleMenu(false); $("stylebtn").focus(); });
 /* ================= DEEP LINKS: the view lives in the URL hash ================= */
-// #d=<district>  |  #t=<textId>&d=<district> (a building)  |  #q=<search>   (q can be combined with the others)
+// #d=<district>  |  #a=<author>  |  #t=<textId>&d=<district> (a building)  |  #q=<search>   (q can be combined with the others)
 let applying=true; // true at startup and while a hash is being applied, so the view is not written back over it
 function hashFor(){
   const p=new URLSearchParams();
-  if(sel!==null){ const b=DATA.buildings[sel]; p.set("t",b.s); p.set("d",b.c); } else if(focus) p.set("d",focus);
+  if(sel!==null){ const b=DATA.buildings[sel]; p.set("t",b.s); p.set("d",b.c); } else if(lens) p.set("a",lens); else if(focus) p.set("d",focus);
   const q=$("q").value.trim(); if(q) p.set("q",q);
   const h=p.toString(); return h?"#"+h:"";
 }
@@ -1232,17 +1296,18 @@ function syncHash(replace=false){
   if(h!==(location.hash==="#"?"":location.hash)){
     try{ history[replace?"replaceState":"pushState"](null,"",location.pathname+location.search+h); }catch(e){} // e.g. sandboxed frames
   }
-  document.title=sel!==null?`${DATA.buildings[sel].src.t} · Metaphorisms`:focus?`${CN[focus]} · Metaphorisms`:"Metaphorisms";
+  document.title=sel!==null?`${DATA.buildings[sel].src.t} · Metaphorisms`:lens?`${AU.get(lens).name} · Metaphorisms`:focus?`${CN[focus]} · Metaphorisms`:"Metaphorisms";
 }
 function applyHash(){
-  const p=new URLSearchParams(location.hash.slice(1)), q=p.get("q")||"", d=p.get("d"), t=p.get("t");
+  const p=new URLSearchParams(location.hash.slice(1)), q=p.get("q")||"", d=p.get("d"), t=p.get("t"), au=p.get("a");
   applying=true;
   try{
     if($("q").value!==q){ $("q").value=q; search(); if(q) searchPop(true); }
     const b=t&&DATA.buildings.find(x=>x.s===t&&(!d||x.c===d));
     if(b) openBuilding(b.i);
+    else if(au&&AU.has(au)) openAuthor(au);
     else if(d&&CN[d]) openDistrict(d);
-    else if(sel!==null||focus) overview();
+    else if(sel!==null||focus||lens) overview();
   } finally { applying=false; }
   syncHash(true); // normalise the URL and the tab title
 }
@@ -1267,7 +1332,7 @@ function replayStep(){
 function replayPlay(){
   clearTimeout(RP.timer);
   if(RP.state==="idle"||RP.state==="ending"){ // start from an empty plate
-    clearSel(); setFocus(null); closePanel(); flyTo(homeBox());
+    clearSel(); clearLens(); returnTo=null; setFocus(null); closePanel(); flyTo(homeBox());
     const by={}; DATA.buildings.forEach(b=>{ (by[b.s]=by[b.s]||[]).push(b); b.el.classList.add("unborn"); });
     RP.steps=Object.keys(by).sort((a,b)=>DATA.S[a].d.localeCompare(DATA.S[b].d)||a.localeCompare(b)).map(s=>({s,bs:by[s]})); RP.i=0;
     $("replaydate").textContent="";

@@ -22,10 +22,11 @@ The view is kept in the URL hash, so any view can be shared or bookmarked, and t
 | Link | Shows |
 |---|---|
 | `#d=maths` | a district (its id, see `DATA.clusters`) |
+| `#a=daniel-litt` | an author: their buildings lit across the city, their texts, metaphors, fingerprint and closest authors |
 | `#t=bessis&d=economy` | one building: a text id and the district of the building (`d` is optional) |
 | `#q=convex` | the search box filled in; combinable with the others, e.g. `#d=terrain&q=mountain` |
 
-Unknown ids fall back to the whole city. The tab title follows the selection.
+The author id is the lower-case name without accents or punctuation (`david-bessis`, `vladimir-lazic`). Reader comments and anonymous authors have no author page; co-authors each get one. Unknown ids fall back to the whole city. The tab title follows the selection.
 
 ## Adding a text
 
