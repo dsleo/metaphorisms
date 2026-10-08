@@ -1,0 +1,3 @@
+#!/bin/sh
+# Refuse to commit when index.html / the README table are out of date with texts/.
+python3 scripts/build.py --check || { echo "index.html or README.md is out of date: run python3 scripts/build.py and stage the result."; exit 1; }

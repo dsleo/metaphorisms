@@ -1,0 +1,15 @@
+{
+  "id": "kontorovich",
+  "title": "Interactions of AI with research math and formalization",
+  "url": "https://alexkontorovich.wordpress.com/2026/04/05/lecture-interactions-of-ai-with-research-math-and-formalization-at-newton-insitute-cambridge/",
+  "date": "2026-04-05",
+  "author": "Alex Kontorovich",
+  "kind": "essay",
+  "metaphors": [
+    {
+      "district": "build",
+      "title": "Monorepo and canonization",
+      "paraphrase": "Mathlib as a coherent monorepo that autoformalization depends on; canonization turns one-off formalizations into library mathematics."
+    }
+  ]
+}

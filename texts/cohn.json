@@ -1,0 +1,15 @@
+{
+  "id": "cohn",
+  "title": "The technical debt of AI-generated mathematics",
+  "url": "https://terrytao.wordpress.com/2026/09/15/the-technical-debt-of-ai-generated-mathematics/",
+  "date": "2026-09-15",
+  "author": "Henry Cohn",
+  "kind": "essay",
+  "metaphors": [
+    {
+      "district": "economy",
+      "title": "Technical debt",
+      "paraphrase": "Math slop creates technical debt that someone else must pay, worse than in software because the answer alone is rarely the point."
+    }
+  ]
+}

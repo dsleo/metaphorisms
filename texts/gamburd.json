@@ -1,0 +1,55 @@
+{
+  "id": "gamburd",
+  "title": "The Siren Call of Silicon Leviathan (arXiv 2609.28591)",
+  "url": "https://arxiv.org/abs/2609.28591",
+  "date": "2026-09-23",
+  "author": "Alexander Gamburd",
+  "kind": "essay",
+  "metaphors": [
+    {
+      "district": "religion",
+      "title": "Silicon Leviathan and its Siren call",
+      "paraphrase": "AI labs as a Hobbesian Leviathan; accepting a certificate without demonstration is the bargain where authority, not truth, makes the law."
+    },
+    {
+      "district": "religion",
+      "title": "Clergy, laity, and Lean as Latin",
+      "paraphrase": "Truths held on authority again: the prover's owners are the clergy, and the language the laity cannot read is Lean."
+    },
+    {
+      "district": "religion",
+      "title": "Certificate of an unvisited monument",
+      "paraphrase": "A 616,000-line Lean proof is a reliable document about a monument no one has visited."
+    },
+    {
+      "district": "religion",
+      "title": "Enlightenment twilight",
+      "paraphrase": "The Enlightenment bound itself to the mast of mathematics; the ship entering turbulent waters threatens the whole project (Aufklärungsdämmerung)."
+    },
+    {
+      "district": "religion",
+      "title": "Subhuman superintelligence",
+      "paraphrase": "Less than human in humanitas, more than human in speed; its builders cast as alchemists."
+    },
+    {
+      "district": "war",
+      "title": "Commons and enclosure",
+      "paraphrase": "Open literature is a commons and frontier models its enclosure; guarding work leads to a “Middle Ages in reverse.”"
+    },
+    {
+      "district": "war",
+      "title": "Bloodless sword",
+      "paraphrase": "Withholding acceptance is the community's only weapon, the one sword the Leviathans cannot forge for themselves."
+    },
+    {
+      "district": "war",
+      "title": "Weil's three monsters",
+      "paraphrase": "Money, mechanisation and algebra fused into one body."
+    },
+    {
+      "district": "games",
+      "title": "AlphaZero test, Stockfish",
+      "paraphrase": "Sarnak's AlphaZero test; the Navier–Stokes run was Stockfish, not AlphaZero."
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "id": "sahai",
+  "title": "We’re gonna need a lot more mathematicians",
+  "url": "https://terrytao.wordpress.com/2026/09/24/were-gonna-need-a-lot-more-mathematicians/",
+  "date": "2026-09-24",
+  "author": "Reader on Sahai's post",
+  "kind": "comment",
+  "metaphors": [
+    {
+      "district": "terrain",
+      "title": "Helicopter to the summit, or to Narnia",
+      "paraphrase": "Using AI on old problems is a helicopter to a familiar summit; real discovery would be a helicopter into a strange, fertile Narnia."
+    },
+    {
+      "district": "games",
+      "title": "Endgame tablebases",
+      "paraphrase": "Chess ignored superhuman tablebase mates via the 50-move rule; math could ignore results humans can't verify."
+    },
+    {
+      "district": "cosmos",
+      "title": "Deployable intellectual reserve",
+      "paraphrase": "Mathematicians as a reserve humanity can call on, e.g. to vet an AI-designed terawatt fusion plant."
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "id": "avigad",
+  "title": "The Future of Mathematics",
+  "url": "https://terrytao.wordpress.com/2026/10/05/the-future-of-mathematics/",
+  "date": "2026-10-05",
+  "author": "Jeremy Avigad",
+  "kind": "essay",
+  "metaphors": [
+    {
+      "district": "terrain",
+      "title": "The Alaskan hike",
+      "paraphrase": "Let AI book the flight for your backpacking trip, not take the hike for you and send pictures."
+    },
+    {
+      "district": "cosmos",
+      "title": "Exams set by aliens",
+      "paraphrase": "Bleaker if math were problems imposed by aliens; past “alien” technologies; Twain's exaggerated death."
+    }
+  ]
+}

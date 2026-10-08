@@ -1,0 +1,20 @@
+{
+  "id": "littBabel",
+  "title": "Mathematics in the Library of Babel",
+  "url": "https://www.daniellitt.com/blog/2026/2/20/mathematics-in-the-library-of-babel/",
+  "date": "2026-02-21",
+  "author": "Daniel Litt",
+  "kind": "essay",
+  "metaphors": [
+    {
+      "district": "terrain",
+      "title": "Library of Babel",
+      "paraphrase": "A library holding proofs of every ZFC theorem plus guides; a mathematician inside would still get to work, because the goal is understanding."
+    },
+    {
+      "district": "terrain",
+      "title": "Clinging to a giant edifice",
+      "paraphrase": "Research as feeling out a huge structure, bashing your skull into an object until its texture imprints on your forehead."
+    }
+  ]
+}

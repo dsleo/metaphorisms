@@ -1,0 +1,25 @@
+{
+  "id": "antieau",
+  "title": "Fast math/slow math",
+  "url": "https://terrytao.wordpress.com/2026/09/15/fast-math-slow-math/",
+  "date": "2026-09-15",
+  "author": "Reader on Antieau's post",
+  "kind": "comment",
+  "metaphors": [
+    {
+      "district": "speed",
+      "title": "Ferrari at the marathon",
+      "paraphrase": "Using AI is like showing up to a marathon in a Ferrari, or with steroids; cars got their own sport, Formula 1."
+    },
+    {
+      "district": "food",
+      "title": "Fast food, slow food",
+      "paraphrase": "Fast math and slow math as two modalities, borrowed from the slow food movement."
+    },
+    {
+      "district": "cosmos",
+      "title": "Pascal's sphere",
+      "paraphrase": "Mathematics as an infinite sphere; beyond human understanding, inscrutable trophies of alien intelligence; LLMs doing math for a nascent civilization."
+    }
+  ]
+}

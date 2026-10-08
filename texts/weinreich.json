@@ -1,0 +1,25 @@
+{
+  "id": "weinreich",
+  "title": "The crisis of AI-generated mathematics (arXiv 2608.02859)",
+  "url": "https://arxiv.org/abs/2608.02859",
+  "date": "2026-08-03",
+  "author": "Max Weinreich",
+  "kind": "essay",
+  "metaphors": [
+    {
+      "district": "war",
+      "title": "Manhattan Project",
+      "paraphrase": "Co-authoring with AI labs is the Manhattan Project of our time; playing with fire; the sandbox is a cage."
+    },
+    {
+      "district": "games",
+      "title": "Novice relaying grandmasters' moves",
+      "paraphrase": "AI-written, AI-digested math reduces humans to the messenger who relays moves between two grandmasters."
+    },
+    {
+      "district": "food",
+      "title": "AI vegetarian, AI vegan",
+      "paraphrase": "Natural versus artificial mathematics, as dietary identities; proofs that “grow on trees.”"
+    }
+  ]
+}

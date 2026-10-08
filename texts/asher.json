@@ -1,0 +1,30 @@
+{
+  "id": "asher",
+  "title": "Math, accelerating toward light speed",
+  "url": "https://justinasher.me/math-approaching-light-speed",
+  "date": "2026-10-05",
+  "author": "Justin Asher",
+  "kind": "essay",
+  "metaphors": [
+    {
+      "district": "speed",
+      "title": "Object approaching light speed",
+      "paraphrase": "Not an airplane we fly but something accelerating away from us, receding from sight as it nears light speed."
+    },
+    {
+      "district": "build",
+      "title": "Builder and explorer",
+      "paraphrase": "Grothendieck's builder of new houses versus Szegedy's explorer; soon AI does both, and we feel like children again."
+    },
+    {
+      "district": "economy",
+      "title": "Mathematics as commodity",
+      "paraphrase": "Mathematics becomes a commodity produced on demand."
+    },
+    {
+      "district": "games",
+      "title": "Go, chess and Move 37",
+      "paraphrase": "Kasparov's and Lee Sedol's confident dismissals; the board for mathematics is infinite."
+    }
+  ]
+}

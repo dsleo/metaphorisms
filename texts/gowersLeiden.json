@@ -1,0 +1,35 @@
+{
+  "id": "gowersLeiden",
+  "title": "Thoughts about the Leiden Declaration",
+  "url": "https://gowers.wordpress.com/2026/07/26/thoughts-about-the-leiden-declaration/",
+  "date": "2026-07-26",
+  "author": "Timothy Gowers",
+  "kind": "essay",
+  "metaphors": [
+    {
+      "district": "grief",
+      "title": "Pandemic that kills mathematicians",
+      "paraphrase": "The literature survives but nobody can read it; with AI, most of math could become like forgotten areas nobody reads."
+    },
+    {
+      "district": "grief",
+      "title": "Rug pulled out; ship sailed",
+      "paraphrase": "Seeing an AI one-shot a beloved problem felt like the rug pulled from under his feet; for classical automated proving, that ship has sailed."
+    },
+    {
+      "district": "grief",
+      "title": "Stars without astronomers' names",
+      "paraphrase": "Theorems detached from mathematicians might be no worse than stars not named after astronomers."
+    },
+    {
+      "district": "food",
+      "title": "IKEA versus artisanal theorems",
+      "paraphrase": "Affordable consistent output versus handmade furniture; perhaps an appetite for artisanal theorems."
+    },
+    {
+      "district": "machines",
+      "title": "Telescopes and colliders",
+      "paraphrase": "AI as scientific instrument: correspondence telescopes, counterexample colliders, the denominator fallacy."
+    }
+  ]
+}

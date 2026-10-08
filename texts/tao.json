@@ -1,0 +1,30 @@
+{
+  "id": "tao",
+  "title": "Mathematics in the age of AI (arXiv 2608.16753)",
+  "url": "https://arxiv.org/abs/2608.16753",
+  "date": "2026-08-17",
+  "author": "Terence Tao",
+  "kind": "essay",
+  "metaphors": [
+    {
+      "district": "build",
+      "title": "Foundations under stress test",
+      "paraphrase": "Like the 1900–1930 crisis in foundations, but now the implicit framework of values and practices is being stress-tested."
+    },
+    {
+      "district": "economy",
+      "title": "Proof scarcity and abundance",
+      "paraphrase": "Institutions built for scarce proofs will misbehave in an era of proof abundance."
+    },
+    {
+      "district": "body",
+      "title": "Proof indigestion",
+      "paraphrase": "Impedance mismatches, or less flatteringly proof indigestion, all along the pipeline from generation to canonicalization."
+    },
+    {
+      "district": "body",
+      "title": "Friction sanded away",
+      "paraphrase": "Over-polished AI proofs sand away the natural friction that tells a reader where to slow down."
+    }
+  ]
+}
