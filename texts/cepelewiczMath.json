@@ -1,0 +1,38 @@
+{
+  "id": "cepelewiczMath",
+  "title": "Is AI the End of Math As We Know It?",
+  "url": "https://www.quantamagazine.org/is-ai-the-end-of-math-as-we-know-it-20261005/",
+  "date": "2026-10-05",
+  "author": "Jordana Cepelewicz",
+  "kind": "essay",
+  "metaphors": [
+    {
+      "district": "terrain",
+      "title": "Teleported to the Peak",
+      "paraphrase": "An AI proof can deliver a result without giving mathematicians the understanding gained by working through it. Like a person suddenly placed on a foggy summit, they may know the answer but not how it connects to the wider terrain or how to help others reach it.",
+      "style_hint": "Draw a lone figure on a fog-covered mountain summit beside a teleportation device, with hidden valleys and trails below.",
+      "district_reason": "AI’s results are pictured as a mountain peak reached without exploration, leaving mathematicians unable to see the surrounding landscape or the route there."
+    },
+    {
+      "district": "terrain",
+      "title": "Gems in Permafrost",
+      "paraphrase": "The old work of proving theorems is portrayed as painstakingly chipping valuable results from frozen ground. AI may take over that labor, leaving mathematicians to interpret and understand what is uncovered.",
+      "style_hint": "Draw a mathematician and a small machine chipping into a frozen ridge, with bright gems embedded in the ice.",
+      "district_reason": "Mathematical work is compared to extracting gems by pecking at permafrost, an image of difficult prospecting."
+    },
+    {
+      "district": "food",
+      "title": "AI Vegetarians",
+      "paraphrase": "Some mathematicians deliberately abstain from using AI, treating that choice like a dietary practice. They want to keep their own thinking involved in creative work rather than offloading it to a machine.",
+      "style_hint": "Draw a mathematician at a table choosing a plant-based meal while leaving a small robot-shaped dish untouched.",
+      "district_reason": "Mathematicians who limit their AI use are likened to people who choose not to eat a particular food."
+    },
+    {
+      "district": "grief",
+      "title": "Staying Aboard",
+      "paraphrase": "The speaker sees mathematics as a discipline in crisis but has decided to remain part of it for as long as possible. The image conveys both the perceived danger and a commitment to the field.",
+      "style_hint": "Draw a mathematician standing aboard a ship beginning to sink, with dark water around it and a faint horizon ahead.",
+      "district_reason": "The field is imagined as a sinking ship, with the speaker choosing to remain aboard despite the danger."
+    }
+  ]
+}
