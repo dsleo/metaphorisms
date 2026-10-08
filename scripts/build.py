@@ -9,7 +9,14 @@ State : the DATA blob inside index.html is the ledger of what is already built.
 A text whose id is already in DATA is only checked (and its wording refreshed in
 place); a text whose id is not in DATA is placed in the unexplored frontier.
 """
-import collections, itertools, json, math, re, sys
+import collections
+import copy
+import itertools
+import json
+import math
+import os
+import re
+import sys
 from pathlib import Path
 from urllib.parse import urlparse
 
@@ -23,6 +30,30 @@ FIRST_RING = 6  # blocks with max(i,j) >= 6 are the expansion area; the original
 
 def die(msg):
     sys.exit("build.py: " + msg)
+
+
+def ensure(cond, msg):
+    """Invariant check that, unlike `assert`, survives `python -O`."""
+    if not cond:
+        die("internal check failed, nothing written: " + msg)
+
+
+def read(path):
+    return path.read_text(encoding="utf-8")
+
+
+def write_atomic(path, text):
+    """Write via a temp file so an interrupted run never leaves a half-written page."""
+    tmp = path.with_name(path.name + ".tmp")
+    tmp.write_text(text, encoding="utf-8")
+    os.replace(tmp, path)
+
+
+def read_json(path):
+    try:
+        return json.loads(read(path))
+    except json.JSONDecodeError as e:
+        die(f"{path.name}: invalid JSON ({e})")
 
 
 def frontier(bk):
@@ -39,14 +70,19 @@ def footprint(b):
 
 # ---------- read / write the DATA blob ----------
 def load_html():
-    html = HTML.read_text()
+    html = read(HTML)
     m = re.search(r"const DATA = ", html)
+    if not m:
+        die("no 'const DATA = ' found in index.html")
     data, n = json.JSONDecoder().raw_decode(html[m.end():])
     return html, data, m.end(), m.end() + n
 
 
-def dump(data):  # ensure_ascii matches how the blob was first written
-    return json.dumps(data, separators=(",", ":"))
+def dump(data):
+    """The blob goes inside a <script>: escape <, > and & so scraped text can never close the tag
+    (\\u003c etc. are plain JSON escapes, the page reads the same values)."""
+    out = json.dumps(data, separators=(",", ":"))  # ensure_ascii also covers U+2028/2029
+    return out.replace("<", "\\u003c").replace(">", "\\u003e").replace("&", "\\u0026")
 
 
 # ---------- duplicates ----------
@@ -77,7 +113,7 @@ def load_districts():
     BUILD.<id> drawing function in index.html (hand-made, see README)."""
     out = {}
     for p in sorted(DISTRICTS.glob("*.json")):
-        d = json.loads(p.read_text())
+        d = read_json(p)
         if d.get("id") != p.stem or not all(isinstance(d.get(k), str) and d[k] for k in ("name", "icon")):
             die(f"{p.name}: needs 'id' (= file name), 'name' and 'icon' (inner SVG of a 24x24 stroke icon)")
         out[d["id"]] = d
@@ -101,7 +137,7 @@ def label_new_districts(data):  # a new district's label sits on the middle of i
 def load_texts(districts):
     out = {}
     for p in sorted(TEXTS.glob("*.json")):
-        t = json.loads(p.read_text())
+        t = read_json(p)
         where = p.name + ": "
         if t.get("id") != p.stem or not re.fullmatch(r"[A-Za-z][A-Za-z0-9]*", p.stem):
             die(where + "'id' must equal the file name (letters/digits, e.g. littBabel)")
@@ -110,10 +146,12 @@ def load_texts(districts):
                 die(where + f"missing '{f}'")
         if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", t["date"]):
             die(where + "date must be YYYY-MM-DD")
-        if not t["url"].startswith(("http://", "https://")):
-            die(where + "url must be http(s)")
+        if not re.fullmatch(r"https?://[^\s\"'<>]+", t["url"]):
+            die(where + "url must be a plain http(s) URL (no spaces, quotes or angle brackets)")
         if t["kind"] not in KINDS:
             die(where + f"kind must be one of {KINDS}")
+        if not isinstance(t["metaphors"], list) or not all(isinstance(m, dict) for m in t["metaphors"]):
+            die(where + "'metaphors' must be a list of objects")
         for m in t["metaphors"]:
             if m.get("district") not in districts:
                 die(where + f"unknown district {m.get('district')!r}; existing: {', '.join(districts)}. "
@@ -262,10 +300,12 @@ def readme_table(data):
 
 
 def render_readme(data):
-    r = README.read_text()
+    r = read(README)
+    if "<!-- sources:start -->" not in r or "<!-- sources:end -->" not in r:
+        die("README.md lost its <!-- sources:start --> / <!-- sources:end --> markers")
     a, b = r.index("<!-- sources:start -->"), r.index("<!-- sources:end -->")
-    intro = (f"\n\nThe {len(data['S'])} texts currently in the city, oldest first. *Type* is `essay` (a post or paper) "
-             "or `comment` (reader comments on a post). *Topics* are the districts where the text has buildings, "
+    intro = (f"\n\nThe {len(data['S'])} texts currently in the city, oldest first. *Type* is `essay` (a post or paper), "
+             "`comment` (reader comments on a post) or `tweet`. *Topics* are the districts where the text has buildings, "
              "most metaphors first. *ID* is the file name in `texts/` and the key in `DATA.S` in `index.html`. "
              "This table is generated by `scripts/build.py`.\n\n")
     return r[:a] + "<!-- sources:start -->" + intro + readme_table(data) + "\n\n" + r[b:]
@@ -273,26 +313,27 @@ def render_readme(data):
 
 # ---------- the guarantee ----------
 def assert_extension_only(old, new):
-    """Everything already on the original map is untouched; the rest is only appended to."""
-    assert len(new["buildings"]) >= len(old["buildings"]) and len(new["rows"]) >= len(old["rows"])
+    """The guarantee: everything already on the original map is untouched; the rest is only appended to."""
+    ensure(len(new["buildings"]) >= len(old["buildings"]) and len(new["rows"]) >= len(old["rows"]), "something was removed")
     for i, b in enumerate(old["buildings"]):
-        assert {k: v for k, v in new["buildings"][i].items() if k != "k"} == {k: v for k, v in b.items() if k != "k"}, f"building {i} moved"
-        assert b.get("k", new["buildings"][i].get("k")) == new["buildings"][i].get("k"), f"building {i} restyled"
+        nb = new["buildings"][i]
+        ensure({k: v for k, v in nb.items() if k != "k"} == {k: v for k, v in b.items() if k != "k"}, f"building {i} moved")
+        ensure(b.get("k", nb.get("k")) == nb.get("k"), f"building {i} restyled")
     for a, b in zip(old["rows"], new["rows"]):
-        assert (a["c"], a["s"]) == (b["c"], b["s"]), "metaphor reassigned"
-    assert new["clusters"][:len(old["clusters"])] == old["clusters"], "districts changed"
+        ensure((a["c"], a["s"]) == (b["c"], b["s"]), "a metaphor was reassigned")
+    ensure(new["clusters"][:len(old["clusters"])] == old["clusters"], "districts changed")
     for key in ("labels", "ICONS"):
-        assert all(new[key].get(k) == v for k, v in old[key].items()), key + " changed"
-    assert all(b in new["blocks"] for b in old["blocks"] if not frontier(b)), "original block changed"
+        ensure(all(new[key].get(k) == v for k, v in old[key].items()), key + " changed")
+    ensure(all(b in new["blocks"] for b in old["blocks"] if not frontier(b)), "an original block changed")
     built = {p for b in new["buildings"] for p in footprint(b)}
-    assert all(d in new["decor"] or (d["x"], d["y"]) in built for d in old["decor"]
-               if (d["x"] - 1) // 3 < FIRST_RING and (d["y"] - 1) // 3 < FIRST_RING), "original tree removed without a building"
+    ensure(all(d in new["decor"] or (d["x"], d["y"]) in built for d in old["decor"]
+               if (d["x"] - 1) // 3 < FIRST_RING and (d["y"] - 1) // 3 < FIRST_RING), "an original tree was removed without a building")
 
 
 def main():
     check = "--check" in sys.argv
     html, data, s, e = load_html()
-    old = json.loads(json.dumps(data))
+    old = copy.deepcopy(data)
     avail = load_districts()
     reconcile(data, texts := load_texts([c["id"] for c in data["clusters"]] + sorted(avail)))
     freeze_style_index(data)
@@ -310,9 +351,9 @@ def main():
     assert_extension_only(old, data)
     new_html, new_readme = html[:s] + dump(data) + html[e:], render_readme(data)
     if check:
-        sys.exit(0 if new_html == html and new_readme == README.read_text() else 1)
-    HTML.write_text(new_html)
-    README.write_text(new_readme)
+        sys.exit(0 if new_html == html and new_readme == read(README) else 1)
+    write_atomic(HTML, new_html)
+    write_atomic(README, new_readme)
     n = len(data["S"]) - len(old["S"])
     print(f"{n} text(s) added, NB {old['NB']} -> {data['NB']}" if n else "nothing new to add")
 
