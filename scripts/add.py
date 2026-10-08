@@ -7,6 +7,7 @@ Only existing districts are handled automatically. If the LLM says a metaphor fi
 the draft goes to texts/_pending/ (ignored by build.py) with a note, and a new district has to be
 designed in a Claude Code session.
 """
+from datetime import datetime
 import html.parser, json, os, re, sys, urllib.parse, urllib.request
 from pathlib import Path
 
@@ -56,7 +57,10 @@ def fetch(url):
     if host in ("twitter.com", "x.com", "www.twitter.com", "www.x.com"):
         o = json.loads(get("https://publish.twitter.com/oembed?omit_script=1&url=" + urllib.parse.quote(url, safe="")))
         p = Page(); p.feed(o["html"])
-        return {"title": f"Tweet by {o['author_name']}", "author": o["author_name"], "date": "", "text": "".join(p.text)}
+        text = "".join(p.text)
+        m = re.search(r"([A-Z][a-z]+ \d{1,2}, \d{4})\s*$", text.strip())  # "... — Name (@x) October 8, 2026"
+        date = datetime.strptime(m.group(1), "%B %d, %Y").strftime("%Y-%m-%d") if m else ""
+        return {"title": f"Tweet by {o['author_name']}", "author": o["author_name"], "date": date, "text": text, "short": True}
     p = Page(); p.feed(get(url))
     m = p.meta
     date = next((m[k][:10] for k in ("article:published_time", "citation_publication_date", "citation_date", "date", "time") if k in m), "")
@@ -72,7 +76,8 @@ def prompt(page, url, data):
     dist = "\n".join(f'- {c["id"]}: {c["name"]} (e.g. {"; ".join(ex.get(c["id"], [])[:4])})' for c in data["clusters"])
     return f"""You catalogue the metaphors that mathematicians and writers use when talking about AI and mathematics.
 Read the text below and list its distinct metaphors/analogies/images (not plain arguments). For each:
-- district: one id from the list below (stretch a little: districts are broad families of images; prefer the closest one), or "NEW" only if the image is clearly alien to all of them (then give new_district: a short name for the missing family of images).
+- district: the family the image is drawn FROM (what AI or mathematics is being compared to), as one id from the list below. Do not force a fit: if the source domain is not one of these families (for example a mathematical structure such as a hull or a group used as a picture for AI), answer "NEW" and give new_district: a short name for the missing family. For other metaphors, "NEW" must not be used just because the fit is imperfect.
+- district_reason: one short line saying what the image is drawn from and why that district (or why none).
 - title: 2-5 words naming the image.
 - paraphrase: one or two sentences in your own words (never quote), saying what the image says about AI/mathematics.
 - style_hint: one sentence describing the building to draw for this image (concrete shapes and objects).
@@ -91,8 +96,8 @@ SCHEMA = {"type": "object", "additionalProperties": False,
           "properties": {"id": {"type": "string"}, "title": {"type": "string"}, "author": {"type": "string"},
                          "kind": {"type": "string", "enum": ["essay", "comment"]}, "date": {"type": "string"},
                          "metaphors": {"type": "array", "items": {"type": "object", "additionalProperties": False,
-                             "required": ["district", "new_district", "title", "paraphrase", "style_hint"],
-                             "properties": {k: {"type": "string"} for k in ("district", "new_district", "title", "paraphrase", "style_hint")}}}}}
+                             "required": ["district", "district_reason", "new_district", "title", "paraphrase", "style_hint"],
+                             "properties": {k: {"type": "string"} for k in ("district", "district_reason", "new_district", "title", "paraphrase", "style_hint")}}}}}
 
 
 def ask(content, model):
@@ -114,7 +119,7 @@ def write_draft(resp, url, page, districts, force=False):
     ms = []
     for m in resp["metaphors"]:
         d = {"district": m["district"] if m["district"] in districts else "NEW", "title": m["title"],
-             "paraphrase": m["paraphrase"], "style_hint": m["style_hint"]}
+             "paraphrase": m["paraphrase"], "style_hint": m["style_hint"], "district_reason": m["district_reason"]}
         if d["district"] == "NEW":
             d["new_district"] = m["new_district"]
         ms.append(d)
@@ -145,7 +150,7 @@ def main():
     dup = None if force else build.find_duplicate(page["title"], url, known)  # before any LLM call
     if dup:
         sys.exit(f"Already in the city as {dup!r} ({known[dup][0]!r}, {known[dup][1]}). Use --force to add it anyway.")
-    if len(page["text"]) < 500:
+    if len(page["text"]) < (40 if page.get("short") else 500):
         sys.exit("Fetched too little text (paywall/JS page?). Paste the text into a file or use a Claude Code session.")
     out, new = write_draft(ask(prompt(page, url, data), model), url, page, [c["id"] for c in data["clusters"]], force)
     print(f"Draft: {out.relative_to(build.ROOT)}")
