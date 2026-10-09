@@ -123,6 +123,26 @@ class TestExtension(Sandbox):
         self.assertNotEqual(self.run_build()[0], 0)
 
 
+class TestNoGrow(Sandbox):
+    def test_no_grow_places_into_existing_cells_and_never_extends_the_map(self):
+        nb = self.data()["NB"]
+        self.put(text("quiet", ["terrain"]))
+        self.assertEqual(self.run_build("--no-grow")[0], 0)
+        d = self.data()
+        self.assertEqual(d["NB"], nb)
+        self.assertEqual(len([b for b in d["buildings"] if b["s"] == "quiet"]), 1)
+
+    def test_no_grow_fails_cleanly_when_nothing_is_left(self):
+        nb = self.data()["NB"]
+        self.put(*[text(f"fill{chr(97 + i)}{chr(97 + j)}", [DISTRICTS[(i + j) % 12], DISTRICTS[(i * 3 + j + 5) % 12]],
+                        title=f"Filler number {chr(97 + i)} and {chr(110 + j)} things", url=f"https://e.com/{i}{j}")
+                   for i in range(9) for j in range(9)])
+        code, message = self.run_build("--no-grow")
+        self.assertNotEqual(code, 0)
+        self.assertIn("--no-grow", message)
+        self.assertEqual(self.data()["NB"], nb)  # nothing was written
+
+
 class TestAddedStamp(Sandbox):
     """Each text records when it was added to the city; the page uses it for 'new since your last visit'."""
 
