@@ -3,6 +3,7 @@
 
     python3 scripts/build.py            # add new texts to index.html + README table
     python3 scripts/build.py --check    # exit 1 if index.html / README are out of date
+    python3 scripts/build.py --no-grow  # never extend the map: use existing tree cells / unexplored blocks, or fail
 
 Input : one texts/<id>.json per text (see README, "Adding a text").
 State : the DATA blob inside index.html is the ledger of what is already built.
@@ -26,6 +27,7 @@ HTML, README, TEXTS, DISTRICTS = ROOT / "index.html", ROOT / "README.md", ROOT /
 KINDS = ("essay", "comment", "tweet")
 MAX_PER_BLOCK = 3  # keep at least one tree per block so the map can breathe
 TREE_FLOOR = 0.4   # and at least this share of all cells stays tree/park; below it the map grows instead
+ALLOW_GROW = True  # --no-grow: only use cells and blocks that already exist
 FIRST_RING = 6  # blocks with max(i,j) >= 6 are the expansion area; the original 6x6 city is frozen
 
 
@@ -256,7 +258,9 @@ def pick_slot(data, c, w):
         spots = [f for f in spots if len(f) > 4 - MAX_PER_BLOCK]  # the block keeps a tree
         if spots:
             return max(spots, key=len)[0]  # the block with the most trees left (first one on ties)
-    while not any(bk.get("open") for bk in blocks) or not room(data, 1 if w == 1 else 4):
+    while not any(bk.get("open") for bk in blocks) or (ALLOW_GROW and not room(data, 1 if w == 1 else 4)):
+        if not ALLOW_GROW:
+            die("no free cell or unexplored block is left for this text; run without --no-grow to extend the map")
         grow(data)
     mine = [bk for bk in blocks if bk["c"] == c and frontier(bk)]
     if mine:  # stay next to what this district already built out here
@@ -358,7 +362,9 @@ def assert_extension_only(old, new):
 
 
 def main():
+    global ALLOW_GROW
     check = "--check" in sys.argv
+    ALLOW_GROW = "--no-grow" not in sys.argv
     html, data, s, e = load_html()
     old = copy.deepcopy(data)
     avail = load_districts()

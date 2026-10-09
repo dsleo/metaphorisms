@@ -1,0 +1,17 @@
+{
+  "id": "fleuretMushrooms",
+  "title": "Fleuret on mushroom hunters and labradors",
+  "url": "https://x.com/francoisfleuret/status/2108443353742299185",
+  "date": "2026-10-09",
+  "author": "François Fleuret",
+  "kind": "tweet",
+  "metaphors": [
+    {
+      "district": "terrain",
+      "title": "Mushroom Hunters and Labradors",
+      "paraphrase": "Offered as an image for the math/AI situation: mathematicians are very skilled mushroom hunters who have refined their art for centuries, and AI is a moult of extremely enthusiastic labradors that has just arrived in the forest.",
+      "style_hint": "A forest clearing with a hunter's basket and mushrooms, and a pack of dogs bounding in.",
+      "district_reason": "It casts mathematical discovery as searching a forest for mushrooms, an image of exploration and finding things in terrain."
+    }
+  ]
+}
