@@ -1,0 +1,28 @@
+{
+  "id": "anderson",
+  "title": "Mathematics in the Dark Forest",
+  "url": "https://proofsandprompts.com/2026/10/18/mathematics-in-the-dark-forest/",
+  "date": "2026-10-18",
+  "author": "Dave Anderson",
+  "kind": "essay",
+  "metaphors": [
+    {
+      "district": "war",
+      "title": "The dark forest",
+      "paraphrase": "In a hostile wilderness, whoever shows a light is hunted: publishing a result or a conjecture paints a bullseye on your world for anyone's LLM.",
+      "style_hint": "A black forest with one lit window and eyes in the trees."
+    },
+    {
+      "district": "games",
+      "title": "Duelling mathematicians",
+      "paraphrase": "Renaissance mathematicians kept methods secret and duelled each other with public challenges; the same secrecy logic returns.",
+      "style_hint": "Two fencers on a stage."
+    },
+    {
+      "district": "food",
+      "title": "Artisanal math and electronic music",
+      "paraphrase": "As not all music is electronic, there will be artisanal, human-made mathematics, perhaps under Dogme-style constraints.",
+      "style_hint": "A workshop with a handmade instrument beside a synthesizer."
+    }
+  ]
+}

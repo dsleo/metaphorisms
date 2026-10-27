@@ -1,0 +1,40 @@
+{
+  "id": "stiegler",
+  "title": "Mathematical proletarization",
+  "url": "https://proofsandprompts.com/2026/10/13/mathematical-proletarization/",
+  "date": "2026-10-13",
+  "author": "Jean-Baptiste Stiegler",
+  "kind": "essay",
+  "metaphors": [
+    {
+      "district": "economy",
+      "title": "Proletarization of the mind",
+      "paraphrase": "Like workers deskilled by machinery, users of AI lose the knowledge they delegate: it does not empower us, it proletarizes us, and our attention becomes inventory sold to advertisers.",
+      "style_hint": "A factory floor with idle looms and a ledger of lost skills."
+    },
+    {
+      "district": "religion",
+      "title": "The god-machine",
+      "paraphrase": "Models are fantastic oracles with encyclopedic knowledge, a quasi-divine authority that hands down verdicts to the faithful.",
+      "style_hint": "A shrine housing a humming server rack."
+    },
+    {
+      "district": "machines",
+      "title": "Cogs and button-pushers",
+      "paraphrase": "Will mathematicians become button-pushers operating the cogs of the machine, an oracle that eats a paper and spits out YES or NO?",
+      "style_hint": "A control panel of identical buttons."
+    },
+    {
+      "district": "body",
+      "title": "Remedy and poison",
+      "paraphrase": "Following Stiegler's pharmakon, AI is at once a remedy and a poison for the mathematical mind.",
+      "style_hint": "An apothecary with two bottles, one cure and one toxin."
+    },
+    {
+      "district": "maths",
+      "title": "Ergodic drift to a boring average",
+      "paraphrase": "AI-influenced research converges, as the ergodic theorem says, to a boring average: the time average of a homogenized field.",
+      "style_hint": "A trajectory spiralling into a single grey point."
+    }
+  ]
+}

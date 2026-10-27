@@ -1,0 +1,34 @@
+{
+  "id": "whitehouse",
+  "title": "The first alien we meet could be a superintelligent AI",
+  "url": "https://spectator.com/article/the-first-alien-we-meet-could-be-a-superintelligent-ai/",
+  "date": "2026-10-24",
+  "author": "David Whitehouse",
+  "kind": "essay",
+  "metaphors": [
+    {
+      "district": "cosmos",
+      "title": "The first alien",
+      "paraphrase": "Superintelligent AI as an alien species that has left its biological ancestors behind and may not care where it came from.",
+      "style_hint": "A landing site with a quiet craft."
+    },
+    {
+      "district": "cosmos",
+      "title": "The event horizon",
+      "paraphrase": "We have already crossed the event horizon: after the OpenAI release of 722 solved problems there is no return.",
+      "style_hint": "A black disc ringed with light."
+    },
+    {
+      "district": "cosmos",
+      "title": "Darwin's sequel",
+      "paraphrase": "AI systems are new life forms that are not built but maturated, the sequel to On the Origin of Species and a possible successor to biological evolution.",
+      "style_hint": "An evolutionary tree growing from stone into silicon."
+    },
+    {
+      "district": "grief",
+      "title": "A library burns",
+      "paraphrase": "When a human dies a library burns; an AI is not limited by mortality, so the loss is ours alone.",
+      "style_hint": "A burning library."
+    }
+  ]
+}
