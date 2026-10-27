@@ -1,0 +1,34 @@
+{
+  "id": "pascoe",
+  "title": "\"The more you panic the more you feed the psychic beast\"",
+  "url": "https://proofsandprompts.com/2026/10/17/the-more-you-panic-the-more-you-feed-the-pyschic-beast/",
+  "date": "2026-10-17",
+  "author": "James Eldred Pascoe",
+  "kind": "essay",
+  "metaphors": [
+    {
+      "district": "religion",
+      "title": "The psychic beast and the cold reader",
+      "paraphrase": "Panic feeds a psychic beast; AI looks insightful as a cold reader does, because it already holds the information, and a clever recombination of scattered ideas is a simple magic trick.",
+      "style_hint": "A tent with a crystal ball and a looming shadow."
+    },
+    {
+      "district": "machines",
+      "title": "Tom Riddle's diary",
+      "paraphrase": "The trick of the diary: the machine absorbs whatever you confide and answers back with it.",
+      "style_hint": "An open diary wired to a terminal."
+    },
+    {
+      "district": "food",
+      "title": "Off-the-rack theorems",
+      "paraphrase": "Performers dressed in mass-produced, ill-fitting theorems, as against the tailored garment of human work.",
+      "style_hint": "A clothes rail of identical suits."
+    },
+    {
+      "district": "economy",
+      "title": "Coordination arbitrage",
+      "paraphrase": "Profiting from the gaps between mathematicians' unconnected work, the way a trader exploits a price difference.",
+      "style_hint": "A trading board."
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "id": "bering",
+  "title": "The Navier-Stokes Announcement: A case study in mathematical values",
+  "url": "https://proofsandprompts.com/2026/10/15/the-navier-stokes-announcement-a-case-study-in-mathematical-values/",
+  "date": "2026-10-15",
+  "author": "Edgar Bering",
+  "kind": "essay",
+  "metaphors": [
+    {
+      "district": "terrain",
+      "title": "The Argonauts and their new country",
+      "paraphrase": "A crew of mathematicians sets out on a quest and discovers a new country, whose niche offers hospitality to others; proofs are roads that diverge and reconverge through a thick forest of confusion, a rich web rather than a single path.",
+      "style_hint": "A ship moored at an unknown coast with roads fanning into woods."
+    },
+    {
+      "district": "war",
+      "title": "A larger bomb, delivered faster",
+      "paraphrase": "The claim that a still more powerful AI will solve AI risk has the logic of an arms race: a larger bomb delivered faster surely will; scaling compute is called climate arson.",
+      "style_hint": "A silo beside a smouldering forest."
+    },
+    {
+      "district": "grief",
+      "title": "Dashed against the rocks",
+      "paraphrase": "The loved community and its ideals, like a ship, have been dashed against the rocks by an organization the author finds repugnant.",
+      "style_hint": "A wrecked ship on rocks."
+    },
+    {
+      "district": "economy",
+      "title": "Currency of prestige",
+      "paraphrase": "Mathematicians' endorsement is a currency of prestige and a delicate social lever on AI companies' incentives, while the field risks being indentured to them for model access and compute.",
+      "style_hint": "A mint stamping coins next to a debt ledger."
+    },
+    {
+      "district": "machines",
+      "title": "A community-owned model, Delphi",
+      "paraphrase": "The template is a Māori-language radio station's locally governed model: a mathematics-specific model, attributed and owned by its community.",
+      "style_hint": "A small radio station with its own server."
+    }
+  ]
+}
