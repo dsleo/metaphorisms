@@ -1,0 +1,40 @@
+{
+  "id": "dahan",
+  "title": "The Mathematician's Promethean Gap",
+  "url": "https://proofsandprompts.com/2026/10/06/the-mathematicians-promethean-gap/",
+  "date": "2026-10-06",
+  "author": "Ruben Dahan",
+  "kind": "essay",
+  "metaphors": [
+    {
+      "district": "religion",
+      "title": "The Promethean gap",
+      "paraphrase": "Humans produce more than they can mentally represent: Prometheus's fire has outrun the mind that stole it.",
+      "style_hint": "A statue holding a flame."
+    },
+    {
+      "district": "war",
+      "title": "The bomber pilot's lagging conscience",
+      "paraphrase": "Like a pilot who could not grasp for a year what his bombs had done, our moral and cognitive grasp lags behind what AI does; the word nuke recurs.",
+      "style_hint": "A bomber silhouette over a calm town."
+    },
+    {
+      "district": "speed",
+      "title": "Icarus and the g-force",
+      "paraphrase": "Machines reach the sun Icarus could not; mathematicians must train, like fighter pilots for g-forces, to keep pace with parallel, skimmable AI output.",
+      "style_hint": "Wax wings above a centrifuge."
+    },
+    {
+      "district": "economy",
+      "title": "The mechanised loom",
+      "paraphrase": "As on Marx's loom, the machine performs the gesture and the worker supervises; mathematical work suffers inflationary devaluation.",
+      "style_hint": "A loom run by gears with a lone overseer."
+    },
+    {
+      "district": "body",
+      "title": "GPS and lost wayfinding",
+      "paraphrase": "As GPS has supplanted the ability to find our way, AI may supplant the ability to think our way.",
+      "style_hint": "A phone showing a route in an empty field."
+    }
+  ]
+}

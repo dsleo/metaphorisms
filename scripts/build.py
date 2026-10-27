@@ -26,8 +26,10 @@ ROOT = Path(__file__).resolve().parent.parent
 HTML, README, TEXTS, DISTRICTS = ROOT / "index.html", ROOT / "README.md", ROOT / "texts", ROOT / "districts"
 KINDS = ("essay", "comment", "tweet")
 MAX_PER_BLOCK = 3  # keep at least one tree per block so the map can breathe
+MAX_PER_NEW_BLOCK = 2  # blocks of the new area stay lighter than the dense original city
 TREE_FLOOR = 0.4   # and at least this share of all cells stays tree/park; below it the map grows instead
 ALLOW_GROW = True  # --no-grow: only use cells and blocks that already exist
+SPREAD_CAP, LABEL_PULL = 10, 0.4  # claim blocks far from other new-area buildings (up to this many blocks), mildly pulled to the district's label
 FIRST_RING = 6  # blocks with max(i,j) >= 6 are the expansion area; the original 6x6 city is frozen
 
 
@@ -253,23 +255,30 @@ def room(data, n):
 def pick_slot(data, c, w):
     blocks = data["blocks"]
     used = {p for b in data["buildings"] for p in footprint(b)}
-    if w == 1 and room(data, 1):  # replace a tree in a block of this district (original or new)
-        spots = [[p for p in cells(bk) if p not in used] for bk in blocks if bk["c"] == c and not bk.get("open")]
-        spots = [f for f in spots if len(f) > 4 - MAX_PER_BLOCK]  # the block keeps a tree
-        if spots:
-            return max(spots, key=len)[0]  # the block with the most trees left (first one on ties)
-    while not any(bk.get("open") for bk in blocks) or (ALLOW_GROW and not room(data, 1 if w == 1 else 4)):
+
+    def tree_spot(new_area_only):  # a tree in a block of this district whose block keeps a tree
+        spots = [(frontier(bk), [p for p in cells(bk) if p not in used]) for bk in blocks if bk["c"] == c and not bk.get("open")]
+        spots = [s for s in spots if len(s[1]) > 4 - (MAX_PER_NEW_BLOCK if s[0] else MAX_PER_BLOCK) and (s[0] or not new_area_only)]
+        return max(spots, key=lambda s: (s[0], len(s[1])))[1][0] if spots else None  # most trees left; first on ties
+
+    while True:
+        if w == 1 and room(data, 1) and tree_spot(True):  # 1. a tree in the new area, so the inner city keeps its air
+            return tree_spot(True)
+        if any(bk.get("open") for bk in blocks) and (not ALLOW_GROW or room(data, 1 if w == 1 else 4)):
+            break  # 2. claim an unexplored block
+        if w == 1 and room(data, 1) and tree_spot(False):  # 3. a tree in the inner city, only if the new area has no room
+            return tree_spot(False)
         if not ALLOW_GROW:
             die("no free cell or unexplored block is left for this text; run without --no-grow to extend the map")
-        grow(data)
-    mine = [bk for bk in blocks if bk["c"] == c and frontier(bk)]
-    if mine:  # stay next to what this district already built out here
-        gi, gj = (sum(bk[a] for bk in mine) / len(mine) for a in "ij")
-    elif c in data["labels"]:  # otherwise the open block closest to the district's own label
-        gi, gj = (v / 3 for v in data["labels"][c])
-    else:     # a brand-new district starts near the middle of the map
-        gi = gj = data["NB"] / 2
-    bk = min((b for b in blocks if b.get("open")), key=lambda b: (math.hypot(b["i"] - gi, b["j"] - gj), b["j"], b["i"]))
+        grow(data)  # 4. a new ring, then try again
+    lab = tuple(v / 3 for v in data["labels"][c]) if c in data["labels"] else (data["NB"] / 2,) * 2
+    taken = [(bk["i"], bk["j"]) for bk in blocks if bk["c"] and frontier(bk)]
+
+    def score(b):  # spread the new area evenly (far from what is already built), but not far from the district's own label
+        gap = min((math.hypot(b["i"] - i, b["j"] - j) for i, j in taken), default=0)
+        return (-(min(gap, SPREAD_CAP) - LABEL_PULL * math.hypot(b["i"] - lab[0], b["j"] - lab[1])), b["j"], b["i"])
+
+    bk = min((b for b in blocks if b.get("open")), key=score)
     bk["c"] = c
     del bk["open"]
     return cells(bk)[0]
@@ -372,7 +381,11 @@ def main():
     freeze_style_index(data)
     known = {i: (v["t"], v["u"]) for i, v in data["S"].items()}
     stamp = now_stamp()
-    for t in sorted((t for i, t in texts.items() if i not in data["S"]), key=lambda t: (t["date"], t["id"])):
+    fresh = sorted((t for i, t in texts.items() if i not in data["S"]), key=lambda t: (t["date"], t["id"]))
+    need = sum(4 if n >= 3 else 1 for t in fresh for n in collections.Counter(m["district"] for m in t["metaphors"]).values())
+    while ALLOW_GROW and not room(data, need):  # grow up front for the whole batch, so its buildings spread over the new area
+        grow(data)
+    for t in fresh:
         dup = None if t.get("duplicate_ok") else find_duplicate(t["title"], t["url"], known)
         if dup:
             die(f"{t['id']} looks like a duplicate of {dup} ({known[dup][0]!r}). If it really is a different text, "

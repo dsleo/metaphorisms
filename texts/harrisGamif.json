@@ -1,0 +1,34 @@
+{
+  "id": "harrisGamif",
+  "title": "Gamification of mathematics off the charts",
+  "url": "https://siliconreckoner.substack.com/p/gamification-of-mathematics-off-the",
+  "date": "2026-10-22",
+  "author": "Michael Harris",
+  "kind": "essay",
+  "metaphors": [
+    {
+      "district": "economy",
+      "title": "Gift economy and the great heist",
+      "paraphrase": "Mathematics as a gift economy, not a branch of the market, against which AI's use of the literature is the greatest math heist in history, a Grand Theft of the commons.",
+      "style_hint": "A wrapped gift beside a vault being emptied."
+    },
+    {
+      "district": "body",
+      "title": "A downpour of fertilizer",
+      "paraphrase": "The deluge of AI-generated texts as fertilizer: nutrients eventually to be absorbed into human papers.",
+      "style_hint": "A field under heavy rain."
+    },
+    {
+      "district": "cosmos",
+      "title": "Theorems named like lunar craters",
+      "paraphrase": "Naming rights over AI-produced results are prestige like craters on the moon or galaxies at the edge of the visible universe.",
+      "style_hint": "A telescope pointed at a cratered moon."
+    },
+    {
+      "district": "games",
+      "title": "Champion gamers prompting",
+      "paraphrase": "Chasing breakthroughs with bespoke prompts is a competitive game, gamified mathematics as the killer app AI firms need to stay afloat.",
+      "style_hint": "An arcade cabinet with a leaderboard."
+    }
+  ]
+}

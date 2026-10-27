@@ -1,0 +1,46 @@
+{
+  "id": "barros",
+  "title": "Mathematics and mysticism: another defense of human mathematics",
+  "url": "https://proofsandprompts.com/2026/10/26/mathematics-and-mysticism-another-defense-of-human-mathematics/",
+  "date": "2026-10-26",
+  "author": "Ignacio Barros",
+  "kind": "essay",
+  "metaphors": [
+    {
+      "district": "religion",
+      "title": "The dim light of mystery",
+      "paraphrase": "Answers are a blinding light; real mathematics happens in the dimness between answers and darkness, as religion accepts its relationship to mystery.",
+      "style_hint": "A chapel lit by a single candle against a glare outside."
+    },
+    {
+      "district": "war",
+      "title": "Settlers and their machines",
+      "paraphrase": "AI builders as settlers who arrive with powerful machines to take over the land of mathematics.",
+      "style_hint": "Wagons and machines at the edge of a field."
+    },
+    {
+      "district": "grief",
+      "title": "Earthquake and rubble",
+      "paraphrase": "The upheaval is an ongoing earthquake and a loud maelstrom that buries the field's deeper values in rubble; waiting for the sea to calm is not an option.",
+      "style_hint": "A cracked building with rubble and a stormy sea behind."
+    },
+    {
+      "district": "food",
+      "title": "Understanding as clothing",
+      "paraphrase": "Reason and understanding are clothes wrapped around creativity, giving it shelter and warmth, while creation itself is the body.",
+      "style_hint": "A tailor's shop with a coat on a mannequin."
+    },
+    {
+      "district": "maths",
+      "title": "Breathing life into objects",
+      "paraphrase": "Defining a mathematical object spells a form of life into a mind-conceived thing; the delicate, glacial objects die if humans stop breathing life into them.",
+      "style_hint": "A crystalline form with a faint pulse."
+    },
+    {
+      "district": "body",
+      "title": "The pandemic of progress",
+      "paraphrase": "The drive for rapid change is an infection, a fever that mathematics predates; mathematicians are almost allergic to the comfort of answers.",
+      "style_hint": "A clinic with a thermometer."
+    }
+  ]
+}

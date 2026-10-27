@@ -1,0 +1,22 @@
+{
+  "id": "tooby",
+  "title": "Warrants, dinosaur bones, and resolving conjectures with AI",
+  "url": "https://proofsandprompts.com/2026/10/13/warrants-dinosaur-bones-and-resolving-conjectures-with-ai/",
+  "date": "2026-10-13",
+  "author": "Joseph Tooby-Smith",
+  "kind": "essay",
+  "metaphors": [
+    {
+      "district": "terrain",
+      "title": "Dinosaur bones in the field",
+      "paraphrase": "Finding a warrant for a conjecture is like digging in a field and hitting a dinosaur bone: partly luck, and AI can hand you fun-shaped rocks instead; careless digging may destroy the evidence of why the bone was there.",
+      "style_hint": "An excavation pit with a skeleton and a few suspicious rocks."
+    },
+    {
+      "district": "machines",
+      "title": "A digger and a dumpster truck",
+      "paraphrase": "Using AI is hiring a digger and a dumpster truck to move more dirt: better odds of a find, at a cost in money and judgment.",
+      "style_hint": "An excavator beside a dumpster truck."
+    }
+  ]
+}

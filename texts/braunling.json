@@ -1,0 +1,42 @@
+{
+  "id": "braunling",
+  "title": "AI fusion cuisine: On the latest research article of Jacob Tsimerman",
+  "url": "https://proofsandprompts.com/2026/10/16/ai-fusion-cuisine-on-the-latest-research-article-of-jacob-tsimerman/",
+  "date": "2026-10-16",
+  "author": "Oliver Bräunling",
+  "kind": "essay",
+  "metaphors": [
+    {
+      "district": "food",
+      "title": "Human-AI fusion cuisine",
+      "paraphrase": "Mathematics mixed from human and AI contributions can no longer be separated, like a fusion dish.",
+      "style_hint": "A restaurant kitchen with two cuisines on one plate."
+    },
+    {
+      "district": "machines",
+      "title": "Brains in sandboxes",
+      "paraphrase": "Keeping AI-influenced and AI-free thinking apart would mean plunging brains into sandboxes, which is implausible.",
+      "style_hint": "A sandbox with a brain-shaped lid."
+    },
+    {
+      "district": "grief",
+      "title": "Dancing in a rain of tears",
+      "paraphrase": "Those responsible dance while young mathematicians whose belief in their own brainpower has shattered and whose meaning of life has evaporated suffer.",
+      "style_hint": "A dance floor in heavy rain."
+    },
+    {
+      "district": "maths",
+      "title": "A disclosure that is the empty set",
+      "paraphrase": "An AI statement is a Schrodinger's cat that is both AI-free and AI-shaped, and conveys as much as the empty set.",
+      "style_hint": "An empty set symbol in a glass case."
+    },
+    {
+      "district": "machines",
+      "title": "Test tubes need no log",
+      "paraphrase": "Readers argue lab scientists do not record their use of test tubes, nor do we cite every book we read: AI is just another tool.",
+      "author": "Readers on Bräunling's post",
+      "kind": "comment",
+      "style_hint": "A rack of test tubes."
+    }
+  ]
+}
