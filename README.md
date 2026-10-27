@@ -98,10 +98,9 @@ You can also write `texts/<id>.json` by hand (the id is a short camelCase key, e
 - Then run `python3 scripts/build.py`.
 
 The city only ever grows: existing buildings are never moved, restyled or removed. Two rules keep it airy: every block keeps at least one tree, and at least 40% of all cells on the map stay trees or park (`TREE_FLOOR` in `build.py`). For each new building, `build.py` looks for a place in this order:
-1. **A tree cell in a new-area block of the same district**, if both rules still hold afterwards: the tree is replaced by the building. The inner city keeps its trees.
-2. **An unexplored block in the new area**: an L-shaped ring along the right/bottom edges, drawn as park until a district claims it. A text with 3 or more metaphors in one district gets a whole block. Among the unexplored blocks, the one far from what is already built is preferred (so the new area fills evenly, edge included), with a mild pull towards the district's own label.
-3. **A tree cell in an inner-city block of the same district**, only when the new area has no unexplored block (or no room under the 40% floor) left.
-4. **A new ring**, whenever none of the above works. When a batch of new texts is built at once, the ring is added up front if the 40% floor needs it, so the batch spreads over the new area. Each ring adds a lot of park, which makes room for further replacements.
+1. **A tree cell in a block of the same district** (original or new), if both rules still hold afterwards: the tree is replaced by the building.
+2. **An unexplored block in the new area**: an L-shaped ring along the right/bottom edges, drawn as park until a district claims it. A text with 3 or more metaphors in one district gets a whole block.
+3. **A new ring**, whenever no unexplored block is left or the 40% floor would be broken. Each ring adds a lot of park, which is what makes room for further replacements.
 
 The park blocks of the original map (the ones that belong to no district) are never claimed.
 

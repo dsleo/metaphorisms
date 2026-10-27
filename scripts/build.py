@@ -26,6 +26,7 @@ ROOT = Path(__file__).resolve().parent.parent
 HTML, README, TEXTS, DISTRICTS = ROOT / "index.html", ROOT / "README.md", ROOT / "texts", ROOT / "districts"
 KINDS = ("essay", "comment", "tweet")
 MAX_PER_BLOCK = 3  # keep at least one tree per block so the map can breathe
+MAX_PER_NEW_BLOCK = 2  # blocks of the new area stay lighter than the dense original city
 TREE_FLOOR = 0.4   # and at least this share of all cells stays tree/park; below it the map grows instead
 ALLOW_GROW = True  # --no-grow: only use cells and blocks that already exist
 SPREAD_CAP, LABEL_PULL = 10, 0.4  # claim blocks far from other new-area buildings (up to this many blocks), mildly pulled to the district's label
@@ -257,7 +258,7 @@ def pick_slot(data, c, w):
 
     def tree_spot(new_area_only):  # a tree in a block of this district whose block keeps a tree
         spots = [(frontier(bk), [p for p in cells(bk) if p not in used]) for bk in blocks if bk["c"] == c and not bk.get("open")]
-        spots = [s for s in spots if len(s[1]) > 4 - MAX_PER_BLOCK and (s[0] or not new_area_only)]
+        spots = [s for s in spots if len(s[1]) > 4 - (MAX_PER_NEW_BLOCK if s[0] else MAX_PER_BLOCK) and (s[0] or not new_area_only)]
         return max(spots, key=lambda s: (s[0], len(s[1])))[1][0] if spots else None  # most trees left; first on ties
 
     while True:
